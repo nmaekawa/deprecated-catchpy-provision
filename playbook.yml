@@ -1,0 +1,74 @@
+# initial playbook to provision a catchpy server
+
+
+- hosts: all
+  remote_user: vagrant
+  become: yes
+  vars:
+    service_name: catchpy
+    service_user: "{{ service_name }}"
+    service_user_home: "/home/{{ service_user }}"
+    service_git_repo: "https://github.com/nmaekawa/catch.git"
+    service_git_revision: "api-doc"
+  tasks:
+    - name: update os
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: service user | create service_user group
+      group:
+        name: "{{ service_name }}"
+        state: present
+
+    - name: service user | create service_user
+      user:
+        name: "{{ service_user }}"
+        group: "{{ service_user }}"
+        home: "{{ service_user_home }}"
+        state: present
+
+    - name: install pip
+      apt:
+        name: python-pip
+        state: present
+
+    - name: install virtualenv
+      pip:
+        name: virtualenv
+        state: present
+
+    - name: create venv dir for service user
+      become_user: "{{ service_user }}"
+      file:
+        path: "{{ service_user_home }}/.venvs"
+        state: directory
+        mode: 0755
+
+    - name: create venv for service
+      become_user: "{{ service_user }}"
+      shell: 'virtualenv -p `which python3` {{ service_user_home }}/.venvs/{{ service_name }}'
+      args:
+        creates: "{{ service_user_home }}/.venvs/{{ service_name }}"
+
+    - name: service setup | clone service repo
+      become_user: "{{ service_user }}"
+      git:
+        repo: "{{ service_git_repo }}"
+        dest: "{{ service_user_home }}/{{ service_name }}"
+        version: "{{ service_git_revision }}"
+        accept_hostkey: yes
+
+    - name: service setup | install requirements
+      become_user: "{{ service_user }}"
+      pip:
+        virtualenv: "{{ service_user_home }}/.venvs/{{ service_name }}"
+        chdir: "{{ service_user_home }}/{{ service_name }}"
+        requirements: "./requirements.txt"
+        state: present
+
+
+
+
+
+
