@@ -1,0 +1,14 @@
+---
+
+    - name: install pip
+      apt:
+        name: python-pip
+        state: present
+
+    - name: install virtualenv
+      pip:
+        name: virtualenv
+        state: present
+
+    # TODO: check that there is a python3 and if not, install it
+    # for now, assuming ubuntu 16.04 which comes with python3.5

@@ -1,0 +1,15 @@
+
+---
+
+    - name: create user_account group
+      group:
+        name: "{{ user_account }}"
+        state: present
+
+    - name: create user_account
+      user:
+        name: "{{ user_account }}"
+        group: "{{ user_account }}"
+        home: "{{ user_account_home }}"
+        state: present
+

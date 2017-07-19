@@ -1,0 +1,14 @@
+---
+
+    - name: create venv dir for service
+      become_user: "{{ user }}"
+      file:
+        path: "{{ venv_dir }}"
+        state: directory
+        mode: 0755
+
+    - name: create venv for service
+      become_user: "{{ user }}"
+      shell: 'virtualenv -p `which python{{ python_version }}` {{ venv_dir }}/{{ venv_name }}'
+      args:
+        creates: "{{ venv_dir }}/{{ venv_name }}"

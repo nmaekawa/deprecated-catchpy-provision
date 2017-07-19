@@ -1,0 +1,9 @@
+---
+
+    - name: set timezone
+      timezone:
+        name: "{{ server_timezone | default('America/New_York') }}"
+      notify:
+      - restart crontab
+
+    # maybe install ntp server? is this needed?

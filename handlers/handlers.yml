@@ -1,0 +1,6 @@
+---
+
+- name: restart crontab
+  service:
+    name: cron
+    state: restarted
