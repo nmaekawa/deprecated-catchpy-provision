@@ -1,0 +1,46 @@
+---
+
+    - name: postgres | add source for postgres to apt repository
+      shell: >
+          echo 'deb http://apt.postgresql.org/pub/repos/apt {{ ubuntu_vname }}-pgdg main' 
+          > /etc/apt/sources.list.d/pgdg.list
+      args:
+        creates: "/etc/apt/sources.list.d/pgdg.list"
+
+    - name: postgres | import postgres signing key
+      apt_key:
+          url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          state: present
+
+    - name: postgres | update pkg list
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: postgres | install postgres server
+      apt:
+        name:
+          - postgresql-{{ pg_version }}
+          - postgresql-contrib-{{ pg_version }}
+
+    - name: postgres | listen to all addresses
+      replace:
+        path: /etc/postgresql/{{ pg_version }}/main/postgresql.conf
+        regexp: "listen_addresses = 'localhost'"
+        replace: "listen_addresses = '*'"
+      notify:
+         - restart postgres
+
+    - name: postgres | add password auth
+      lineinfile:
+        path: /etc/postgresql/{{ pg_version }}/main/pg_hba.conf
+        line: "host    all             all             all            md5"
+      notify:
+         - restart postgres
+
+    - name: postgres | explicitly set default client encoding
+      lineinfile:
+        path: /etc/postgresql/{{ pg_version }}/main/postgresql.conf
+        line: "client_encoding = utf8"
+      notify:
+         - restart postgres

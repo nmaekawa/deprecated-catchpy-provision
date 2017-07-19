@@ -4,6 +4,7 @@
 - hosts: all
   remote_user: vagrant
   become: yes
+  become_user: root
   vars:
     service_name: catchpy
     service_user: "{{ service_name }}"
@@ -12,7 +13,7 @@
     service_git_revision: "api-doc"
 
   handlers:
-    - include: handlers.yml
+    - include: handlers/handlers.yml
 
   roles:
     - apt
@@ -27,12 +28,16 @@
 - hosts: catchpy
   remote_user: vagrant
   become: yes
+  become_user: root
   vars:
     service_name: catchpy
     service_user: "{{ service_name }}"
     service_user_home: "/home/{{ service_user }}"
     service_git_repo: "https://github.com/nmaekawa/catch.git"
     service_git_revision: "api-doc"
+
+  handlers:
+    - include: handlers/handlers.yml
 
   roles:
 
@@ -54,6 +59,21 @@
       catchpy_venv_dir: "{{ catchpy_install_dir }}/.venv"
 
 
+- hosts: postgres
+  remote_user: vagrant
+  become: yes
+  become_user: root
+  vars:
+    postgres_version: 9.6
+    ubuntu_version_name: xenial
 
+  handlers:
+    - include: handlers/handlers.yml
+
+  roles:
+    -
+      role: postgresql
+      pg_version: "{{ postgres_version }}"
+      ubuntu_vname: "{{ ubuntu_version_name }}"
 
 
