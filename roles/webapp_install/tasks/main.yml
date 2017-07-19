@@ -1,0 +1,18 @@
+---
+
+    - name: setup | clone webapp repo
+      become_user: "{{ webapp_user }}"
+      git:
+        repo: "{{ webapp_git_repo }}"
+        dest: "{{ webapp_install_dir }}"
+        version: "{{ webapp_git_revision }}"
+        accept_hostkey: yes
+
+    - name: setup | install requirements
+      become_user: "{{ webapp_user }}"
+      pip:
+        virtualenv: "{{ webapp_venv_dir }}"
+        chdir: "{{ webapp_install_dir }}"
+        requirements: "./requirements.txt"
+        state: present
+

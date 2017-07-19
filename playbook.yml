@@ -47,12 +47,10 @@
       ubuntu_vname: "{{ ubuntu_version_name }}"
 
     -
-      role: catchpy_db_install
-      catchpy_db_user: "{{ service_user }}"
-      catchpy_db_password: "{{ service_user }}"
-      catchpy_db_name: "{{ service_name }}"
-
-
+      role: webapp_db_create
+      webapp_db_user: "{{ service_user }}"
+      webapp_db_password: "{{ service_user }}"
+      webapp_db_name: "{{ service_name }}"
 
 
 - hosts: catchpy
@@ -78,13 +76,13 @@
       venv_name: "{{ service_name }}"
 
     -
-      role: catchpy_install
-      catchpy_user: "{{ service_user }}"
-      catchpy_install_dir: "{{ service_user_home }}/{{ service_name }}"
-      catchpy_git_repo: "{{ service_git_repo }}"
-      catchpy_git_revision: "{{ service_git_revision }}"
-      catchpy_venv_dir: "{{ catchpy_install_dir }}/.venv"
-      catchpy_db_user: "{{ service_user }}"
-      catchpy_db_password: "{{ service_user }}"
-      catchpy_db_name: "{{ service_name }}"
+      role: webapp_install
+      webapp_user: "{{ service_user }}"
+      webapp_install_dir: "{{ service_user_home }}/{{ service_name }}"
+      webapp_git_repo: "{{ service_git_repo }}"
+      webapp_git_revision: "{{ service_git_revision }}"
+      webapp_venv_dir: "{{ webapp_install_dir }}/.venv"
+      webapp_db_user: "{{ service_user }}"
+      webapp_db_password: "{{ service_user }}"
+      webapp_db_name: "{{ service_name }}"
 

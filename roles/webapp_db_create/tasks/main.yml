@@ -3,16 +3,16 @@
     - name: db | create database user
       become_user: postgres
       postgresql_user:
-        name: "{{ catchpy_db_user }}"
-        password: "{{ catchpy_db_password }}"
+        name: "{{ webapp_db_user }}"
+        password: "{{ webapp_db_password }}"
 
-    - name: db | create catchpy database
+    - name: db | create webapp database
       become_user: postgres
       postgresql_db:
-        name: "{{ catchpy_db_name }}"
+        name: "{{ webapp_db_name }}"
         encoding: UTF-8
         lc_collate: en_US.utf8
         lc_ctype: en_US.utf8
         template: template0
-        owner: "{{ catchpy_db_user }}"
+        owner: "{{ webapp_db_user }}"
 
