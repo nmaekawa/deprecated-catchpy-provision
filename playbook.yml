@@ -18,11 +18,41 @@
   roles:
     - apt
     - timedate
+    - python_setup
 
     -
       role: user_account
       user_account: "{{ service_user }}"
       user_account_home: "{{ service_user_home }}"
+
+
+- hosts: postgres
+  remote_user: vagrant
+  become: yes
+  become_user: root
+  vars:
+    postgres_version: 9.6
+    ubuntu_version_name: xenial
+    service_name: catchpy
+    service_user: "{{ service_name }}"
+    service_user_home: "/home/{{ service_user }}"
+
+  handlers:
+    - include: handlers/handlers.yml
+
+  roles:
+    -
+      role: postgresql
+      pg_version: "{{ postgres_version }}"
+      ubuntu_vname: "{{ ubuntu_version_name }}"
+
+    -
+      role: catchpy_db_install
+      catchpy_db_user: "{{ service_user }}"
+      catchpy_db_password: "{{ service_user }}"
+      catchpy_db_name: "{{ service_name }}"
+
+
 
 
 - hosts: catchpy
@@ -40,9 +70,6 @@
     - include: handlers/handlers.yml
 
   roles:
-
-    - python_setup
-
     -
       role: python_venv
       user: "{{ service_user }}"
@@ -57,23 +84,7 @@
       catchpy_git_repo: "{{ service_git_repo }}"
       catchpy_git_revision: "{{ service_git_revision }}"
       catchpy_venv_dir: "{{ catchpy_install_dir }}/.venv"
-
-
-- hosts: postgres
-  remote_user: vagrant
-  become: yes
-  become_user: root
-  vars:
-    postgres_version: 9.6
-    ubuntu_version_name: xenial
-
-  handlers:
-    - include: handlers/handlers.yml
-
-  roles:
-    -
-      role: postgresql
-      pg_version: "{{ postgres_version }}"
-      ubuntu_vname: "{{ ubuntu_version_name }}"
-
+      catchpy_db_user: "{{ service_user }}"
+      catchpy_db_password: "{{ service_user }}"
+      catchpy_db_name: "{{ service_name }}"
 

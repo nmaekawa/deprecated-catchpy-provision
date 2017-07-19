@@ -17,11 +17,12 @@
         update_cache: yes
         upgrade: dist
 
-    - name: postgres | install postgres server
+    - name: postgres | install postgres
       apt:
         name:
           - postgresql-{{ pg_version }}
           - postgresql-contrib-{{ pg_version }}
+          - python-psycopg2
 
     - name: postgres | listen to all addresses
       replace:
