@@ -8,17 +8,29 @@
         fail_on_missing: yes
 
     - name: cfg | drop .env file
-        template:
-          src: "/tmp/{{ inventory_hostname }}/{{ service_dotenv_template_filename }}"
-          dest: "{{ service_dotenv_path }}"
-          owner: "{{ service_user }}"
-          group: "{{ service_user }}"
-          mode: 0744
+      become_user: "{{ service_user }}"
+      template:
+        src: "/tmp/{{ inventory_hostname }}/{{ service_dotenv_template_filename }}"
+        dest: "{{ service_dotenv_path }}"
+        owner: "{{ service_user }}"
+        group: "{{ service_user }}"
+        mode: 0744
 
     # can only run this after env is configured!
     - name: cfg | apply migrations
+      become_user: "{{ service_user }}"
       django_manage:
         command: migrate
         app_path: "{{ service_install_dir }}"
         virtualenv: "{{ service_venv_dir }}"
 
+    - name: cfg | install gunicorn
+      become_user: "{{ service_user }}"
+      pip:
+        virtualenv: "{{ service_venv_dir }}"
+        chdir: "{{ service_install_dir }}"
+        name: gunicorn
+        state: present
+
+    # install supervisor
+    #

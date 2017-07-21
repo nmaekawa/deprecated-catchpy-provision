@@ -1,7 +1,22 @@
 ---
 
-    - name: update os
+    - name: install security updates and update os
       apt:
         update_cache: yes
         upgrade: dist
+
+    - name: install base packages
+      apt:
+        name: "{{ item }}"
+        state: installed
+      with_items:
+        - build-essential
+        - htop
+        - python-pip
+        - supervisor
+
+    - name: upgrade pip
+      pip:
+        name: pip
+        state: latest
 

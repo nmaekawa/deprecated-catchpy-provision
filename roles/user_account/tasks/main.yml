@@ -13,3 +13,10 @@
         home: "{{ service_user_home }}"
         state: present
 
+    - name: create service rootdir
+      file:
+        path: "{{ service_rootdir }}"
+        owner: "{{ service_user }}"
+        group: "{{ service_user }}"
+        mode: 0775
+        state: directory

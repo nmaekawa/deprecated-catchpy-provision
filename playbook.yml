@@ -31,7 +31,6 @@
 
   roles:
     - postgresql
-    - webapp_db_create
 
 
 - hosts: catchpy
