@@ -3,13 +3,13 @@
 
     - name: create user_account group
       group:
-        name: "{{ user_account }}"
+        name: "{{ service_user }}"
         state: present
 
-    - name: create user_account
+    - name: create service_user
       user:
-        name: "{{ user_account }}"
-        group: "{{ user_account }}"
-        home: "{{ user_account_home }}"
+        name: "{{ service_user }}"
+        group: "{{ service_user }}"
+        home: "{{ service_user_home }}"
         state: present
 

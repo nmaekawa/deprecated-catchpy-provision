@@ -5,12 +5,8 @@
   remote_user: vagrant
   become: yes
   become_user: root
-  vars:
-    service_name: catchpy
-    service_user: "{{ service_name }}"
-    service_user_home: "/home/{{ service_user }}"
-    service_git_repo: "https://github.com/nmaekawa/catch.git"
-    service_git_revision: "api-doc"
+  vars_files:
+    - vars/catchpy_vars.yml
 
   handlers:
     - include: handlers/handlers.yml
@@ -20,69 +16,45 @@
     - timedate
     - python_setup
 
-    -
-      role: user_account
-      user_account: "{{ service_user }}"
-      user_account_home: "{{ service_user_home }}"
+    - user_account
 
 
 - hosts: postgres
   remote_user: vagrant
   become: yes
   become_user: root
-  vars:
-    postgres_version: 9.6
-    ubuntu_version_name: xenial
-    service_name: catchpy
-    service_user: "{{ service_name }}"
-    service_user_home: "/home/{{ service_user }}"
+  vars_files:
+    - vars/catchpy_vars.yml
 
   handlers:
     - include: handlers/handlers.yml
 
   roles:
-    -
-      role: postgresql
-      pg_version: "{{ postgres_version }}"
-      ubuntu_vname: "{{ ubuntu_version_name }}"
-
-    -
-      role: webapp_db_create
-      webapp_db_user: "{{ service_user }}"
-      webapp_db_password: "{{ service_user }}"
-      webapp_db_name: "{{ service_name }}"
+    - postgresql
+    - webapp_db_create
 
 
 - hosts: catchpy
   remote_user: vagrant
   become: yes
   become_user: root
-  vars:
-    service_name: catchpy
-    service_user: "{{ service_name }}"
-    service_user_home: "/home/{{ service_user }}"
-    service_git_repo: "https://github.com/nmaekawa/catch.git"
-    service_git_revision: "api-doc"
+  vars_files:
+    - vars/catchpy_vars.yml
 
   handlers:
     - include: handlers/handlers.yml
 
   roles:
+    - nginx
+    - python_venv
+    - webapp_install
     -
-      role: python_venv
-      user: "{{ service_user }}"
-      python_version: 3
-      venv_dir: "{{ service_user_home }}/.venvs"
-      venv_name: "{{ service_name }}"
-
-    -
-      role: webapp_install
-      webapp_user: "{{ service_user }}"
-      webapp_install_dir: "{{ service_user_home }}/{{ service_name }}"
-      webapp_git_repo: "{{ service_git_repo }}"
-      webapp_git_revision: "{{ service_git_revision }}"
-      webapp_venv_dir: "{{ webapp_install_dir }}/.venv"
-      webapp_db_user: "{{ service_user }}"
-      webapp_db_password: "{{ service_user }}"
-      webapp_db_name: "{{ service_name }}"
-
+      role: webapp_config
+      webapp_name: "{{ service_name }}"
+      webapp_install_dir: "{{ service_install_dir }}"
+      webapp_venv_dir: "{{ service_venv_dir }}"
+      webapp_settings: "{{ service_settings }}"
+      webapp_dotenv_template_path:
+      webapp_dotenv_template_filename:
+      tags:
+        - run_now

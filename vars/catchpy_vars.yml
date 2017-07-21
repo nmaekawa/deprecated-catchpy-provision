@@ -1,0 +1,22 @@
+---
+
+python_version: 3
+postgres_version: 9.6
+ubuntu_version_name: xenial
+
+service_name: catchpy
+service_user: "{{ service_name }}"
+service_user_home: "/home/{{ service_user }}"
+service_install_dir: "{{ service_user_home }}/{{ service_name }}"
+service_dotenv_template_filename: "{{ sample.env.j2 }}"
+service_dotenv_template_path: "{{ service_install_dir }}/{{ service_name }}/settings/{{ service_dotenv_template_Filename }}"
+service_dotenv_path: "{{ service_install_dir }}/{{service_name}}/{{ service_name }}.env"
+service_venv_dir: "{{ service_user_home }}/.venvs/{{ service_name }}"
+service_settings: "{{ service_name }}.settings.dev"
+service_db_name: "{{ service_name }}"
+service_db_user: "{{ service_name }}"
+service_db_password: "{{ service_name }}"
+
+service_git_repo: "https://github.com/nmaekawa/catch.git"
+service_git_revision: "vagrant-provision"
+

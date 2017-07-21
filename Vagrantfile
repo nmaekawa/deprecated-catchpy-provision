@@ -17,11 +17,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     postgres.vm.provider "virtualbox" do |v|
         v.memory = "4096"
     end
-
-    #postgres.vm.provision "ansible" do |ansible|
-    #    ansible.verbose = "vv"
-    #    ansible.playbook = "playbook.yml"
-    #end
   end
 
   # django webapp
@@ -38,11 +33,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     catchpy.vm.provider "virtualbox" do |v|
         v.memory = "4096"
     end
-
-    #catchpy.vm.provision "ansible" do |ansible|
-    #    ansible.verbose = "vv"
-    #    ansible.playbook = "playbook.yml"
-    #end
   end
 
 end
