@@ -2,3 +2,42 @@
     - name: install nginx
       apt:
         name: nginx
+        state: installed
+
+    - name: copy ssl cert to service host
+      copy:
+        content: "{{ ssl_crt }}"
+        dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.crt"
+      notify: restart nginx
+
+    - name: copy ssl private key to service host
+      copy:
+        content: "{{ ssl_key }}"
+        dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.key"
+      notify: restart nginx
+
+    - name: nginx configuration file
+      template:
+        src: "service_config.j2"
+        dest: /etc/nginx/sites-available/{{ service_name }}
+        backup: yes
+      notify: reload nginx
+
+    - name: ensure default site is disabled
+      file:
+        path: /etc/nginx/site-available/default
+        state: absent
+      notify: reload nginx
+
+    - name: ensure service site is enabled
+      file:
+        src: /etc/nginx/sites-available/{{ service_name }}
+        dest: /etc/nginx/sites-enabled/{{ service_name }}
+        state: link
+      notify: reload nginx
+
+    - name: ensure nginx service is started
+      service:
+        name: nginx
+        state: started
+        enabled: yes

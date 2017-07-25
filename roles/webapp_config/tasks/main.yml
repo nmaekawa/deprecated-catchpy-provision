@@ -4,27 +4,31 @@
     - name: cfg | pull .env template from provisioned host
       fetch:
         src: "{{ service_dotenv_template_path }}"
-        dest: "/tmp"
+        dest: "{{ playbook_dir }}"
         fail_on_missing: yes
 
     - name: cfg | drop .env file
       become_user: "{{ service_user }}"
+      environment:
+        CATCHPY_DB_HOST: "{{ catchpy_db_host }}"
       template:
-        src: "/tmp/{{ inventory_hostname }}/{{ service_dotenv_template_filename }}"
+        src: "{{ playbook_dir }}/{{ inventory_hostname }}/{{ service_dotenv_template_path }}"
         dest: "{{ service_dotenv_path }}"
         owner: "{{ service_user }}"
-        group: "{{ service_user }}"
+        group: "{{ service_group }}"
         mode: 0744
 
     # can only run this after env is configured!
-    - name: cfg | apply migrations
+    - name: migration | apply migrations
       become_user: "{{ service_user }}"
+      environment:
+        CATCHPY_DOTENV_PATH: "{{ service_dotenv_path }}"
       django_manage:
         command: migrate
         app_path: "{{ service_install_dir }}"
         virtualenv: "{{ service_venv_dir }}"
 
-    - name: cfg | install gunicorn
+    - name: pip packages | install gunicorn
       become_user: "{{ service_user }}"
       pip:
         virtualenv: "{{ service_venv_dir }}"
@@ -32,5 +36,39 @@
         name: gunicorn
         state: present
 
-    # install supervisor
-    #
+    - name: gunicorn | create gunicorn config
+      become_user: "{{ service_user }}"
+      template:
+        src: gunicorn_start.j2
+        dest: "{{ service_venv_dir }}/bin/gunicorn_start"
+        owner: "{{ service_user }}"
+        group: "{{ service_group }}"
+        mode: 0755
+        backup: yes
+
+    - name: logs | create log folder
+      become_user: "{{ service_user }}"
+      file:
+        path: "{{ service_log_dir }}"
+        owner: "{{ service_user }}"
+        group: "{{ service_group }}"
+        mode: 0774
+        state: directory
+
+    - name: supervisor | ensure supervisor is running
+      service:
+        name: supervisor
+        state: started
+        enabled: yes
+
+    - name: supervisor | create supervisor config
+      template:
+        src: supervisor_config.j2
+        dest: /etc/supervisor/conf.d/{{ service_name }}.conf
+        backup: yes
+
+    - name: supervisor | reload supervisor config for {{ service_name }}
+      supervisorctl:
+        name: "{{ service_name }}"
+        state: present
+

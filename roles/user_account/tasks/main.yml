@@ -3,20 +3,28 @@
 
     - name: create user_account group
       group:
-        name: "{{ service_user }}"
+        name: "{{ service_group }}"
         state: present
 
     - name: create service_user
       user:
         name: "{{ service_user }}"
-        group: "{{ service_user }}"
-        home: "{{ service_user_home }}"
+        group: "{{ service_group }}"
+        home: "/home/{{ service_user }}"
         state: present
 
     - name: create service rootdir
       file:
         path: "{{ service_rootdir }}"
         owner: "{{ service_user }}"
-        group: "{{ service_user }}"
+        group: "{{ service_group }}"
+        mode: 0775
+        state: directory
+
+    - name: create service conf dir
+      file:
+        path: "{{ service_config_dir }}"
+        owner: "{{ service_user }}"
+        group: "{{ service_group }}"
         mode: 0775
         state: directory

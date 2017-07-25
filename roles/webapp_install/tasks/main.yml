@@ -16,3 +16,13 @@
         requirements: "./requirements.txt"
         state: present
 
+    - name: setup | pip install service package
+      become_user: "{{ service_user }}"
+      shell: ". {{ service_venv_dir }}/bin/activate && pip install -e ."
+      args:
+        chdir: "{{ service_install_dir }}"
+
+    - name: setup | install postgres client
+      apt:
+        name: postgresql-client
+        state: present

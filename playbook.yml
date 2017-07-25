@@ -47,13 +47,9 @@
     - nginx
     - python_venv
     - webapp_install
-    -
-      role: webapp_config
-      webapp_name: "{{ service_name }}"
-      webapp_install_dir: "{{ service_install_dir }}"
-      webapp_venv_dir: "{{ service_venv_dir }}"
-      webapp_settings: "{{ service_settings }}"
-      webapp_dotenv_template_path:
-      webapp_dotenv_template_filename:
-      tags:
-        - run_now
+    - webapp_config
+
+
+
+
+
