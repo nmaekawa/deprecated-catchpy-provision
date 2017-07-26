@@ -21,23 +21,18 @@
         src: "service_config.j2"
         dest: /etc/nginx/sites-available/{{ service_name }}
         backup: yes
-      notify: reload nginx
+      notify: restart nginx
 
     - name: ensure default site is disabled
       file:
         path: /etc/nginx/sites-enabled/default
         state: absent
-      notify: reload nginx
+      notify: restart nginx
 
     - name: ensure service site is enabled
       file:
         src: /etc/nginx/sites-available/{{ service_name }}
         dest: /etc/nginx/sites-enabled/{{ service_name }}
         state: link
-      notify: reload nginx
+      notify: restart nginx
 
-    - name: ensure nginx service is started
-      service:
-        name: nginx
-        state: started
-        enabled: yes

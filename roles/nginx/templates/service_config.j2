@@ -32,7 +32,7 @@ server {
     }
 
     location /media/ {
-        alias   {{ nginx_static_dir }};
+        alias   {{ nginx_media_dir }};
     }
 
     location / {
