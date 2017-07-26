@@ -31,6 +31,8 @@ service_environment:
   CATCHPY_DB_PASSWORD: "catchpy"
   CATCHPY_DB_HOST: "{{ catchpy_db_host }}"
   CATCHPY_DB_PORT: "5432"
+service_admin_user: "dragonman"
+service_admin_password: "password"
 
 nginx_access_log_path: "{{ service_log_dir }}/nginx_access.log"
 nginx_error_log_path: "{{ service_log_dir }}/nginx_error.log"
@@ -43,6 +45,12 @@ service_db_password: "{{ service_name }}"
 
 service_git_repo: "https://github.com/nmaekawa/catch.git"
 service_git_revision: "vagrant-provision"
+
+django_createsuperuser: >
+    import os;
+    from django.contrib.auth.models import User;
+    User.objects.create_superuser(os.environ.get('CATCHPY_ADMIN_USER',
+      'CATCHPY_ADMIN_EMAIL', 'CATCHPY_ADMIN_PASSWORD')
 
 # demo certificates!
 ssl_crt: |
