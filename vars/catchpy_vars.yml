@@ -1,5 +1,7 @@
 ---
 
+env: dev
+vagrant: yes
 python_version: 3
 postgres_version: 9.6
 
@@ -11,20 +13,29 @@ service_group: "www-data"
 
 service_install_dir: "{{ service_rootdir }}/{{ service_name }}"
 service_config_dir: "{{ service_rootdir }}/conf"
-service_log_dir: "{{ service_rootdir }}/log"
+service_log_dir: "{{ service_rootdir }}/logs"
 service_bin_dir: "{{ service_rootdir }}/bin"
 service_venv_dir: "{{ service_rootdir }}/venvs/{{ service_name }}"
+service_static_rootdir: "{{ service_rootdir }}/www"
 
-service_dotenv_template_filename: "template.env.j2"
-service_dotenv_template_path: "{{ service_install_dir }}/{{ service_name }}/settings/{{ service_dotenv_template_filename }}"
 service_dotenv_path: "{{ service_config_dir }}/{{ service_name }}.env"
-service_settings: "{{ service_name }}.settings.dev"
 service_log_path: "{{ service_log_dir }}/gunicorn_supervisor.log"
+service_environment:
+  DJANGO_SETTINGS_MODULE: "{{ service_name }}.settings.{{ env }}"
+  CATCHPY_SECRET_KEY: "nao mais muse que a lira tenho destemperada"
+  CATCHPY_STATIC_ROOT: "{{ service_static_rootdir }}/static"
+  CATCHPY_ALLOWED_HOSTS: "localhost 127.0.0.1 {{ nginx_server_name }}"
+  CATCHPY_COMPAT_MODE: "false"
+  CATCHPY_DB_NAME: "catchpy"
+  CATCHPY_DB_USER: "catchpy"
+  CATCHPY_DB_PASSWORD: "catchpy"
+  CATCHPY_DB_HOST: "{{ catchpy_db_host }}"
+  CATCHPY_DB_PORT: "5432"
 
 nginx_access_log_path: "{{ service_log_dir }}/nginx_access.log"
 nginx_error_log_path: "{{ service_log_dir }}/nginx_error.log"
 nginx_ssl_dest_dir: "/etc/ssl"
-nginx_static_dir: "{{ service_venv_dir }}/static/"
+nginx_static_dir: "{{ service_static_rootdir }}"
 
 service_db_name: "{{ service_name }}"
 service_db_user: "{{ service_name }}"

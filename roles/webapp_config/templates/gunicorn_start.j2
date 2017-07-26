@@ -17,6 +17,9 @@ echo "`date`: Starting $NAME as `whoami`"
 cd $DJANGODIR
 . {{ service_venv_dir }}/bin/activate
 
+# define dotenv location
+export CATCHPY_DOTENV_PATH="{{ service_dotenv_path }}"
+
 # create the run directory if it doesn't exist
 RUNDIR=$(dirname $SOCKFILE)
 test -d $RUNDIR || mkdir -p $RUNDIR

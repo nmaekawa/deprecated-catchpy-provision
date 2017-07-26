@@ -21,3 +21,8 @@
     name: nginx
     state: restarted
     enabled: yes
+
+- name: restart webapp
+  supervisorctl:
+    name: "{{ service_name }}"
+    state: restarted

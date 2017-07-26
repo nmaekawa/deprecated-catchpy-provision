@@ -1,18 +1,10 @@
 ---
 
     # https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-16-04
-    - name: cfg | pull .env template from provisioned host
-      fetch:
-        src: "{{ service_dotenv_template_path }}"
-        dest: "{{ playbook_dir }}"
-        fail_on_missing: yes
-
     - name: cfg | drop .env file
       become_user: "{{ service_user }}"
-      environment:
-        CATCHPY_DB_HOST: "{{ catchpy_db_host }}"
       template:
-        src: "{{ playbook_dir }}/{{ inventory_hostname }}/{{ service_dotenv_template_path }}"
+        src: webapp_dotenv.j2
         dest: "{{ service_dotenv_path }}"
         owner: "{{ service_user }}"
         group: "{{ service_group }}"
@@ -27,6 +19,16 @@
         command: migrate
         app_path: "{{ service_install_dir }}"
         virtualenv: "{{ service_venv_dir }}"
+
+    - name: collectstatic | run collectstatic
+      become_user: "{{ service_user }}"
+      environment:
+        CATCHPY_DOTENV_PATH: "{{ service_dotenv_path }}"
+      django_manage:
+        command: collectstatic
+        app_path: "{{ service_install_dir }}"
+        virtualenv: "{{ service_venv_dir }}"
+      notify: restart webapp
 
     - name: pip packages | install gunicorn
       become_user: "{{ service_user }}"
