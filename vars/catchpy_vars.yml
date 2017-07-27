@@ -18,17 +18,21 @@ service_bin_dir: "{{ service_rootdir }}/bin"
 service_venv_dir: "{{ service_rootdir }}/venvs/{{ service_name }}"
 service_static_rootdir: "{{ service_rootdir }}/www"
 
+service_db_name: "{{ service_name }}"
+service_db_user: "{{ service_name }}"
+service_db_password: "{{ service_name }}"
+
 service_dotenv_path: "{{ service_config_dir }}/{{ service_name }}.env"
 service_log_path: "{{ service_log_dir }}/gunicorn_supervisor.log"
 service_environment:
   DJANGO_SETTINGS_MODULE: "{{ service_name }}.settings.{{ env }}"
-  CATCHPY_SECRET_KEY: "nao mais muse que a lira tenho destemperada"
+  CATCHPY_SECRET_KEY: "nao mais musa que a lira tenho destemperada"
   CATCHPY_STATIC_ROOT: "{{ service_static_rootdir }}"
   CATCHPY_ALLOWED_HOSTS: "localhost 127.0.0.1 {{ nginx_server_name }}"
   CATCHPY_COMPAT_MODE: "false"
-  CATCHPY_DB_NAME: "catchpy"
-  CATCHPY_DB_USER: "catchpy"
-  CATCHPY_DB_PASSWORD: "catchpy"
+  CATCHPY_DB_NAME: "{{ service_db_name }}"
+  CATCHPY_DB_USER: "{{ service_db_user }}"
+  CATCHPY_DB_PASSWORD: "{{ service_db_password }}"
   CATCHPY_DB_HOST: "{{ catchpy_db_host }}"
   CATCHPY_DB_PORT: "5432"
 service_admin_user: "dragonman"
@@ -40,18 +44,8 @@ nginx_ssl_dest_dir: "/etc/ssl"
 nginx_static_dir: "{{ service_static_rootdir }}/"
 nginx_media_dir: "{{ nginx_static_dir }}"
 
-service_db_name: "{{ service_name }}"
-service_db_user: "{{ service_name }}"
-service_db_password: "{{ service_name }}"
-
 service_git_repo: "https://github.com/nmaekawa/catch.git"
 service_git_revision: "vagrant-provision"
-
-django_createsuperuser: >
-    import os;
-    from django.contrib.auth.models import User;
-    User.objects.create_superuser(os.environ.get('CATCHPY_ADMIN_USER',
-      'CATCHPY_ADMIN_EMAIL', 'CATCHPY_ADMIN_PASSWORD')
 
 # demo certificates!
 ssl_crt: |

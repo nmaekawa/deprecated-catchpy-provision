@@ -15,7 +15,6 @@
     - apt
     - timedate
     - python_setup
-
     - user_account
 
 
