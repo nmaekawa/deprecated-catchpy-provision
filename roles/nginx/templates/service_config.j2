@@ -6,15 +6,16 @@ upstream {{ service_name }}_wsgi_server {
   server unix:{{ service_venv_dir }}/run/gunicorn.sock fail_timeout=0;
 }
 
+{% if env == 'prod' %}
 server {
     listen      80;
-    server_name {{ nginx_server_name }};
+    server_name {{ inventory_hostname }};
     rewrite     ^ https://$server_name$request_uri? permanent;
 }
 
 server {
     listen              443;
-    server_name         {{ nginx_server_name }};
+    server_name         {{ inventory_hostname }};
     ssl on;
     ssl_certificate     {{ nginx_ssl_dest_dir }}/{{ service_name }}.crt;
     ssl_certificate_key {{ nginx_ssl_dest_dir }}/{{ service_name }}.key;
@@ -64,3 +65,51 @@ server {
         root {{ service_venv_dir }}/;
     }
 }
+{% else %}
+server {
+    listen              80;
+    server_name         {{ inventory_hostname }};
+
+    client_max_body_size 4G;
+
+    access_log {{ nginx_access_log_path }};
+    error_log {{ nginx_error_log_path }};
+
+    location /static/ {
+        alias   {{ nginx_static_dir }};
+    }
+
+    location /media/ {
+        alias   {{ nginx_media_dir }};
+    }
+
+    location / {
+        if (-f {{ service_venv_dir }}/maintenance_on.html) {
+            return 503;
+        }
+
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto http;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+
+        # Try to serve static files from nginx, no point in making an
+        # *application* server like Unicorn/Rainbows! serve static files.
+        if (!-f $request_filename) {
+            proxy_pass http://{{ service_name }}_wsgi_server;
+            break;
+        }
+    }
+
+    # Error pages
+    error_page 500 502 504 /500.html;
+    location = /500.html {
+        root {{ nginx_static_dir }}/;
+    }
+
+    error_page 503 /maintenance_on.html;
+    location = /maintenance_on.html {
+        root {{ service_venv_dir }}/;
+    }
+}
+{% endif %}
