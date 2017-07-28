@@ -59,9 +59,8 @@ the default configuration:
   `/opt/hx/catchpy/venvs/catchpy/bin/gunicorn_start`
 - gunicorn is configured to talk to nginx via a socket at
   `/opt/hx/catchpy/venvs/run/gunicorn.sock`
-- nginx will redirect requests via http to https
-- nginx certificates are dummy!
 - django admin user is 'dragonman:password'
+- nginx for dev env uses HTTP (HTTPS will require certs that can be verified)
 
 if all goes well, you should be able to check it out at
 https://catchpy.vm/static/anno/index.html
@@ -115,11 +114,6 @@ variables you might want to change:
    this is the django admin ui superuser. The provisioning will create this
    user automatically (and as side effect, a consumer key-pair will be
    generated as well). Change to values that make sense to you.
-   
-5. ssl_crt/ssl_key
-   these are bogus ssl certificates that were copied from some other place.
-   you might want to generate your own.
-
 
 
 
