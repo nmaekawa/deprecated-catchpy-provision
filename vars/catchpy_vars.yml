@@ -44,8 +44,8 @@ nginx_ssl_dest_dir: "/etc/ssl"
 nginx_static_dir: "{{ service_static_rootdir }}/"
 nginx_media_dir: "{{ nginx_static_dir }}"
 
-service_git_repo: "https://github.com/nmaekawa/catch.git"
-service_git_revision: "vagrant-provision"
+service_git_repo: "https://github.com/nmaekawa/catchpy.git"
+service_git_revision: "master"
 
 # demo certificates!
 ssl_crt: |
