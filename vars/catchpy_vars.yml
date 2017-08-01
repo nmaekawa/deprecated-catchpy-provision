@@ -9,6 +9,7 @@ postgres_version: 9.6
 service_name: catchpy
 service_rootdir: "/opt/hx/{{ service_name }}"
 service_user: "{{ service_name }}"
+# share permissions with webserver
 service_group: "www-data"
 
 service_install_dir: "{{ service_rootdir }}/{{ service_name }}"
@@ -22,6 +23,11 @@ service_db_name: "{{ service_name }}"
 service_db_user: "{{ service_name }}"
 service_db_password: "{{ service_name }}"
 
+db_backup_dir: "/opt/hx/postgres/backup"
+db_backup_s3_path: "catchbu.harvardx.harvard.edu/{{ env }}"
+db_backup_local_retention: 7
+db_backup_s3_retention: "6 months"
+
 service_dotenv_path: "{{ service_config_dir }}/{{ service_name }}.env"
 service_log_path: "{{ service_log_dir }}/gunicorn_supervisor.log"
 service_environment:
@@ -33,7 +39,7 @@ service_environment:
   CATCHPY_DB_NAME: "{{ service_db_name }}"
   CATCHPY_DB_USER: "{{ service_db_user }}"
   CATCHPY_DB_PASSWORD: "{{ service_db_password }}"
-  CATCHPY_DB_HOST: "{{ catchpy_db_host }}"
+  CATCHPY_DB_HOST: "{{ service_db_host }}"
   CATCHPY_DB_PORT: "5432"
 service_admin_user: "dragonman"
 service_admin_password: "password"

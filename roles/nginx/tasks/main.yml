@@ -9,12 +9,16 @@
         content: "{{ ssl_crt }}"
         dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.crt"
       notify: restart nginx
+      tags:
+        - certs
 
     - name: copy ssl private key to service host
       copy:
         content: "{{ ssl_key }}"
         dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.key"
       notify: restart nginx
+      tags:
+        - certs
 
     - name: nginx configuration file
       template:
@@ -22,6 +26,8 @@
         dest: /etc/nginx/sites-available/{{ service_name }}
         backup: yes
       notify: restart nginx
+      tags:
+        - nginx_config
 
     - name: ensure default site is disabled
       file:
