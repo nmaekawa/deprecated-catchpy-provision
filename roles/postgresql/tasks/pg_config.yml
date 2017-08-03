@@ -1,0 +1,73 @@
+---
+
+    - name: config | listen to all addresses
+      replace:
+        path: /etc/postgresql/{{ postgres_version }}/main/postgresql.conf
+        regexp: ".*listen_addresses.*"
+        replace: "listen_addresses = '*'"
+        backup: yes
+      notify:
+         - restart postgres
+
+    - name: config log | turn on log collector
+      replace:
+        path: /etc/postgresql/{{ postgres_version }}/main/postgresql.conf
+        regexp: ".*logging_collector.*"
+        replace: "logging_collector = on"
+      notify:
+         - restart postgres
+
+    - name: config log | set up log_directory
+      replace:
+        path: /etc/postgresql/{{ postgres_version }}/main/postgresql.conf
+        regexp: ".*log_directory.*"
+        replace: "log_directory = 'pg_log'"
+      notify:
+         - restart postgres
+
+    - name: config log | set up log_filename
+      replace:
+        path: /etc/postgresql/{{ postgres_version }}/main/postgresql.conf
+        regexp: ".*log_filename.*"
+        replace: "log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'"
+      notify:
+         - restart postgres
+
+    - name: config log | set up log_rotation
+      replace:
+        path: /etc/postgresql/{{ postgres_version }}/main/postgresql.conf
+        regexp: ".*log_truncate_on_rotation.*"
+        replace: "log_truncate_on_rotation = on"
+      notify:
+         - restart postgres
+
+    - name: config log | set up log_rotation_age
+      replace:
+        path: /etc/postgresql/{{ postgres_version }}/main/postgresql.conf
+        regexp: ".*log_rotation_age.*"
+        replace: "log_rotation_age = 1d"
+      notify:
+         - restart postgres
+
+    - name: config log | set up log_rotation_size
+      replace:
+        path: /etc/postgresql/{{ postgres_version }}/main/postgresql.conf
+        regexp: ".*log_rotation_size.*"
+        replace: "log_rotation_size = 100MB"
+      notify:
+         - restart postgres
+
+    - name: config encoding | explicitly set default client encoding
+      lineinfile:
+        path: /etc/postgresql/{{ postgres_version }}/main/postgresql.conf
+        line: "client_encoding = utf8"
+      notify:
+         - restart postgres
+
+    - name: config access | add password auth
+      lineinfile:
+        path: /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf
+        line: "host    all             all             all            md5"
+      notify:
+         - restart postgres
+

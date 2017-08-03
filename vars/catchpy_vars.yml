@@ -5,9 +5,10 @@ vagrant: yes
 python_version: 3
 postgres_version: 9.6
 
+hx_rootdir: "/opt/hx"
 
 service_name: catchpy
-service_rootdir: "/opt/hx/{{ service_name }}"
+service_rootdir: "{{ hx_rootdir }}/{{ service_name }}"
 service_user: "{{ service_name }}"
 # share permissions with webserver
 service_group: "www-data"
@@ -23,7 +24,9 @@ service_db_name: "{{ service_name }}"
 service_db_user: "{{ service_name }}"
 service_db_password: "{{ service_name }}"
 
-db_backup_dir: "/opt/hx/postgres/backup"
+db_rootdir: "{{ hx_rootdir }}/postgres"
+db_data_dir: "{{ db_rootdir }}/data/{{ postgres_version }}/main"
+db_backup_dir: "{{ db_rootdir }}/backup"
 db_backup_s3_path: "catchbu.harvardx.harvard.edu/{{ env }}"
 db_backup_local_retention: 7
 db_backup_s3_retention: "6 months"
