@@ -1,0 +1,9 @@
+{{ service_log_path }} {
+    create 640 {{ service_user }} {{ service_group }}
+    notifempty
+    daily
+    rotate {{ service_log_retention_in_days }}
+    size 100M
+    missingok
+    compress
+}

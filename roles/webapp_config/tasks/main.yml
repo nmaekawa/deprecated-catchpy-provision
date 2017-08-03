@@ -87,3 +87,12 @@
         name: "{{ service_name }}"
         state: present
 
+    - name: log | drop logrotate conf
+      template:
+        src: logrotate.j2
+        dest: "/etc/logrotate.d/{{ service_name }}"
+        mode: 0644
+      tags:
+        - drop_app_logrotate
+
+

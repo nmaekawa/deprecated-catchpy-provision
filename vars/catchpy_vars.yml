@@ -16,6 +16,7 @@ service_group: "www-data"
 service_install_dir: "{{ service_rootdir }}/{{ service_name }}"
 service_config_dir: "{{ service_rootdir }}/conf"
 service_log_dir: "{{ service_rootdir }}/logs"
+service_log_retention_in_days: 370
 service_bin_dir: "{{ service_rootdir }}/bin"
 service_venv_dir: "{{ service_rootdir }}/venvs/{{ service_name }}"
 service_static_rootdir: "{{ service_rootdir }}/www"
@@ -36,7 +37,8 @@ db_backup_s3_retention: "6 months"
 db_log_retention_in_days: 90
 
 service_dotenv_path: "{{ service_config_dir }}/{{ service_name }}.env"
-service_log_path: "{{ service_log_dir }}/gunicorn_supervisor.log"
+service_log_filename: "gunicorn_supervisor.log"
+service_log_path: "{{ service_log_dir }}/{{ service_log_filename }}"
 service_environment:
   DJANGO_SETTINGS_MODULE: "{{ service_name }}.settings.{{ env }}"
   CATCHPY_SECRET_KEY: "nao mais musa que a lira tenho destemperada"
