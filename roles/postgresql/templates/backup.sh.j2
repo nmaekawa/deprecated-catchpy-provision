@@ -9,7 +9,7 @@ DB_NAME="{{ service_db_name }}"
 BACKUP_DIR="{{ db_backup_dir }}"
 S3_PATH="{{ db_backup_s3_path }}"
 
-LOCAL_RETENTION_DAYS="{{ db_backup_local_retention }}"
+LOCAL_RETENTION_DAYS="{{ db_backup_local_retention_in_days }}"
 S3_RETENTION="{{ db_backup_s3_retention }}"
 
 NOW=$(date +"%m-%d-%Y-at-%H-%M-%S")

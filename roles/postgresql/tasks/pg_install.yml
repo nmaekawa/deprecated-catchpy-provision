@@ -35,6 +35,8 @@
       with_items:
         - backup
         - data
+        - bin
+        - log
 
     - name: postgres | ensure service is running
       service:

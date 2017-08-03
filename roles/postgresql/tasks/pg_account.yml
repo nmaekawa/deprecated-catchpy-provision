@@ -1,6 +1,6 @@
 ---
 
-    - name: db | create database user
+    - name: db | create database service user
       become_user: postgres
       postgresql_user:
         name: "{{ service_db_user }}"

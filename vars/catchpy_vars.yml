@@ -27,9 +27,13 @@ service_db_password: "{{ service_name }}"
 db_rootdir: "{{ hx_rootdir }}/postgres"
 db_data_dir: "{{ db_rootdir }}/data/{{ postgres_version }}/main"
 db_backup_dir: "{{ db_rootdir }}/backup"
+db_log_dir: "{{ db_data_dir }}/pg_log"
+db_other_log_dir: "{{ db_rootdir }}/log"
+db_bin_dir: "{{ db_rootdir }}/bin"
 db_backup_s3_path: "catchbu.harvardx.harvard.edu/{{ env }}"
-db_backup_local_retention: 7
+db_backup_local_retention_in_days: 7
 db_backup_s3_retention: "6 months"
+db_log_retention_in_days: 90
 
 service_dotenv_path: "{{ service_config_dir }}/{{ service_name }}.env"
 service_log_path: "{{ service_log_dir }}/gunicorn_supervisor.log"
