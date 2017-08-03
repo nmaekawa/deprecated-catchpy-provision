@@ -17,6 +17,7 @@
   become_user: root
   vars_files:
     - vars/catchpy_vars.yml
+    - vars/users_public_keys.yml
 
   handlers:
     - include: handlers/handlers.yml
@@ -53,10 +54,10 @@
     - include: handlers/handlers.yml
 
   roles:
-    - nginx
     - python_venv
     - webapp_install
     - webapp_config
+    - nginx
 
 
 

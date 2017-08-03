@@ -1,0 +1,41 @@
+---
+    - name: make sure we have a `sudo` group
+      group:
+        name: sudo
+        state: present
+
+    - name: allow `sudo` group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        regexp: "^%sudo"
+        line: "%sudo ALL=(ALL) NOPASSWD: ALL"
+        state: present
+        validate: visudo -cf %s
+
+    - name: create user account group
+      group:
+        name: "{{ user.group }}"
+        state: present
+
+    - name: create user account
+      user:
+        name: "{{ user.name }}"
+        group: "{{ user.group }}"
+        home: "/home/{{ user.name }}"
+        shell: "/bin/bash"
+        state: present
+
+    - name: add user to sudo group
+      user:
+        name: "{{ user.name }}"
+        groups: sudo
+        append: yes
+      when: user.superpower is defined and user.superpower == "powerpuff"
+
+    - name: add ssh key to authorized_keys
+      authorized_key:
+        user: "{{ user.name }}"
+        key: "{{ user.pubkey }}"
+      when: user.pubkey is defined
+
+

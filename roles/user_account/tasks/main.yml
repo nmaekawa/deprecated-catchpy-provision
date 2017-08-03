@@ -1,18 +1,22 @@
-
 ---
 
-    - name: create user_account group
-      group:
-        name: "{{ service_group }}"
-        state: present
 
-    - name: create service_user
-      user:
-        name: "{{ service_user }}"
-        group: "{{ service_group }}"
-        home: "/home/{{ service_user }}"
-        state: present
+    - include: setup_user.yml user={{ item }}
+      with_items:
+        - "{{ devo_users }}"
+      tags:
+        - create_users
 
+
+    - include: setup_user.yml
+      args:
+        user:
+            name: "{{ service_user }}"
+            group: "{{ service_group }}"
+      tags:
+        - create_users
+
+    # TODO: move this to webapp_install or config
     - name: create service rootdir
       file:
         path: "{{ service_rootdir }}"
