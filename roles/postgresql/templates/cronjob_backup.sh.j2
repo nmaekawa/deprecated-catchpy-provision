@@ -15,7 +15,8 @@ S3_RETENTION="{{ db_backup_s3_retention }}"
 NOW=$(date +"%m-%d-%Y-at-%H-%M-%S")
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-date
+echo "$(date +"%F %T") pg_dump starting:"
+echo "pg_dump -Fc ${DB_NAME} > ${BACKUP_DIR}/${NOW}_${DB_NAME}.pgdump"
 
 # dump db
 pg_dump -Fc ${DB_NAME} > "${BACKUP_DIR}/${NOW}_${DB_NAME}.pgdump"
@@ -27,15 +28,34 @@ fi
 
 # copy to s3
 # STANDARD_IA == infrequent access
-aws s3 cp /tmp/${NOW}_${DB_NAME}.pgdump s3://${S3_PATH}/${NOW}_${DB_NAME}.pgdump --storage-class STANDARD_IA
+#aws s3 cp /tmp/${NOW}_${DB_NAME}.pgdump s3://${S3_PATH}/${NOW}_${DB_NAME}.pgdump --storage-class STANDARD_IA
 
-if [ $? -ne 0 ]; then
-    echo "Error: transferring ${NOW}_${DB_NAME}.pgdump to s3://${S3_PATH}"
-    exit 20
-fi
+#if [ $? -ne 0 ]; then
+#    echo "Error: transferring ${NOW}_${DB_NAME}.pgdump to s3://${S3_PATH}"
+#    exit 20
+#fi
+
+echo "$(date +"%F %T") remove old backups:"
+find ${BACKUP_DIR} \
+    -type f \
+    -name "*_${DB_NAME}.pgdump" \
+    -mtime +${LOCAL_RETENTION_DAYS} \
+    -print
 
 # delete local backups older than LOCAL_RETENTION_DAYS days (default "7")
-find ${BACKUP_DIR} -type f -name "*_${DB_NAME}.pgdump" -mtime ${LOCAL_RETENTION_DAYS} -delete
+find ${BACKUP_DIR} \
+    -type f \
+    -name "*_${DB_NAME}.pgdump" \
+    -mtime +${LOCAL_RETENTION_DAYS} \
+    -delete
+
+#############
+#
+# hack to skip s3 stuff; make sure instance profile is setup before enabling s3
+#
+echo "$(date +"%F %T") pg_dump DONE"
+exit 0
+
 
 # delete s3 backups older than S3_RETENTION (default "6 months")
 maxDate=$(date +%s --date="-$S3_RETENTION")

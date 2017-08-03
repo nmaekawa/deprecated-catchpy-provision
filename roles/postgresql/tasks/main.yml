@@ -3,5 +3,8 @@
     - include: pg_config.yml
     - include: pg_move_data_dir.yml
     - include: pg_logrotate.yml
+    - include: pg_backup.yml
+      tags:
+        - pg_backup
     - include: pg_account.yml
 

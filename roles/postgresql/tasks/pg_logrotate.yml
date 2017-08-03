@@ -62,7 +62,7 @@
       cron:
         name: cleanup logs older than {{ db_log_retention_in_days }}
         user: postgres
-        job: "{{ db_bin_dir }}/cleanup_log.sh"
+        job: "{{ db_bin_dir }}/cleanup_log.sh >> {{ db_other_log_dir }}/cronjob.log 2&>1 "
         special_time: daily
         state: present
 
