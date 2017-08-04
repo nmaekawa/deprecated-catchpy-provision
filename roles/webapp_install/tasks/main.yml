@@ -22,6 +22,14 @@
       args:
         chdir: "{{ service_install_dir }}"
 
+    - name: setup | add CATCHPY_DOTENV_PATH to .bashrc
+      become_user: "{{ service_user }}"
+      lineinfile:
+        path: /home/{{ service_user }}/.bashrc
+        line: "export {{ service_name | upper }}_DOTENV_PATH={{ service_dotenv_path }}"
+        backup: yes
+        state: present
+
     - name: setup | install postgres client
       apt:
         name: postgresql-client
