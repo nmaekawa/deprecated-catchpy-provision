@@ -1,7 +1,6 @@
 ---
 
 env: dev
-vagrant: yes
 python_version: 3
 postgres_version: 9.6
 

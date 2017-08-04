@@ -5,6 +5,7 @@ ansible provisioning for catchpy backend service
 
 you'll need:
 
+- catchpy git clone
 - vagrant
     - install dns plugin landrush: `$> vagrant plugin install landrush`
 - virtualbox
@@ -12,19 +13,20 @@ you'll need:
 
 ## start vagrant instances
 
-this vagrantfile will start 2 ubuntu xenial instances:
+the vagrantfile in catchpy repo will start 2 ubuntu xenial instances:
 
-    - postgres.vm (10.4.4.4)
-    - catchpy.vm (10.4.4.5)
+    - postgres.vm
+    - catchpy.vm
 
     $> git clone https://github.com/nmaekawa/catchpy-provision.git
-    $> cd catchpy-provision
+    $> git clone https://github.com/nmaekawa/catchpy.git
+    $> cd catchpy
     $> vagrant up
 
 this will only start the boxes, so they don't have anything installed yet.
 you can change the tld and assigned local ips in the `Vagrantfile`.
 
-you can login into each box like below:
+from the catchpy repo, you can login into each box like below:
 
     $> vagrant ssh catchpy
     # or
@@ -40,7 +42,7 @@ you can login into each box like below:
 
 the ansible playbook.yml will provision both instances; to run:
 
-    $> cd catchpy-provision
+    $> cd ../catchpy-provision
     
     # set vagrant insecure key in your env
     $> ssh-add ~/.vagrant.d/insecure_private_key
