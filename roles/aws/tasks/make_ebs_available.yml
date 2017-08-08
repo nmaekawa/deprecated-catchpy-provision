@@ -1,0 +1,15 @@
+---
+
+    - name: extra-ebs | make filesys on ebs device
+      filesystem: fstype=ext4 force=yes
+        dev="{{ ebs_device | mandatory }}"
+
+    - name: extra-ebs | create mount point for ebs
+      file: path="{{ ebs_mountpoint | mandatory }}"
+        state=directory
+
+    - name: extra-ebs | mount ebs volume
+      mount: name="{{ ebs_mountpoint | mandatory}}"
+        fstype=ext4 state=mounted
+        src="{{ ebs_device | mandatory }}"
+

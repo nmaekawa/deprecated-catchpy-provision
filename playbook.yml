@@ -27,6 +27,7 @@
     - timedate
     - python_setup
     - user_account
+    - aws
 
 
 - hosts: postgres
