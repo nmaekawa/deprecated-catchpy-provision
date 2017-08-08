@@ -106,7 +106,7 @@ variables you might want to change:
    
    to mess up with database webapp user
    
-2. service_environment.CATCHPY_SECRET_KEY
+2. service_environment.CATCHPY_DJANGO_SECRET_KEY
    
    this is the SECRET_KEY for django sessions, crypt signing, etc
    

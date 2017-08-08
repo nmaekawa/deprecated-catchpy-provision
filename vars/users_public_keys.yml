@@ -6,12 +6,7 @@ devo_users:
       pubkey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzqqaZVXkqnFVUaHN0zHTy6vwE5CVjOAg1UWM89ui1G/Ry6X+wVyt/xrlIP35R3fZ/byQ40JnlbCBXpFyKyA2KNIroIz/5GBDjTH6dYHggw9Dx5GzcoW6Bu3eIDOa3jg2Qi3QaX0toNVIMF2X16knD/ddko5qJvXNwppF2/aLKGdP0nD+VQcC6gVJdJxbf/PB6N3S4k3b+6jvU2DJy8aLwV2X+cOa5l2HN9/oPCnMXChhSbyCgO6rrrWHsnUcpKoT/HL208W7dnihKzYZedGOfWfw6TT1B8E77g+Bt1K3qe4ojj78h5v95L1JAK8ZYqjd7q/r1UxI6fF27LqXlAe8b nmaekawa dce 27nov14"
       superpower: powerpuff
 
-    - name: "snoopy"
-      group: "snoopy"
-      pubkey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDK8OSFIhM/AZE4pRQ0x1wDlnLnP3I1A7JeTiTctXtctbLKYTHKfu2HG3CUFmcR1m+KOdcI/Ok2bLHEIOKK8nw3x71CK3Tes+ay1sSMZnMJCnpE32/Fc88VZ8d06Tf2C85odN4qDuAvwum4BCZrGeOAPuox67NhbCkKg+I/Z6PKwdpQ9bUzmfNKU+iSs1IJNheE3QNLH9iTJ33gyJCzZ1cWv0GDvaAI/JN32dRE2ztYgxnEIsXRFrm/ePxLzd0nnCEyLA4gleFKkiGXJ9BZJFYfwDB3NnOydQXLDN/bUgaR7SRO2aC6wi1DOneXXUyaJcoC1UDkhLJhzMjSD62FjEAR snoopy 03aug17"
-
-    - name: "linus"
-      group: "linus"
-      pubkey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCci1vx6MAgO1DzIh3fFXbe3tsjFDui7aNGlmoMRDuge1pLg/maPm+lLVeB+BTJ/2UJWlV1DCRaDZkts/t2XHzsBR9/fLPE/E+ksSGBWNXnx7VmnNHA44HvT8P1UAg1WBTNrmRdy+3ATHUmf5Y/PgWqMeW0ProUr7MKfQZehCvKCeFUH3fqsbGyALPF55K4yubSLs31gKogCRcxPzq9Vy87Bl8isAkOIv5lghwy4XCHsYSvAhyTPBc/vnM3jwu7KMi1qKlzXu2+Fk1zdiafNQOavAMnUHuyHbijHCUGwtO4fTU+e/Y6Hu9krRvRudn8RFZ1+PIRz4vnKEzfUw2M57y3 linus 03aug17"
+    - name: "lduarte"
+      group: "lduarte"
+      pubkey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDPuNJzFkhEgimwkP1ovO240Te/dCA3CV2JZpEjjdBn7EIz/X78Osgc21M1wqDUAXeiymXADy5u7qEUjzVlTu0p2IwH5ldPKHEzM3sKVNStWq0PD0HvfKC/rcCRJ+glwBS9LFVwcSVp3v1/qnlcNALEUAujZVMTdt+3eM03eS2rQVK5xXpPb1yiEzcWe+tSPkIrCQ3CGfm8io47/O0ZZipwSpILZSWMqryJ4T82IGP+O77OJuq65yJeSRr/TqILqNT844iz0kuQ09CnHhISBX0P32JJOH99DVFHosFusNKcY3A4DAXU1cpMYrLKor/eRp39lIspeg9A9i5EW0ukeDpL lduarte1991@gmail.com"
       superpower: powerpuff
-
