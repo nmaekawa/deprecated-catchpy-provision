@@ -125,6 +125,14 @@ variables you might want to change:
    
    git branch, tag, or sha to be cloned in the catchpy instance.
 
+# logs, restarting services
+
+django app logs can be found at `/opt/hx/catchpy/logs/gunicorn_supervisor.log`
+
+the django app is setup to use gunicorn and supervisor so if you need to restart
+the webapp do:
+
+    $> sudo supervisorctl restart catchpy
 
 
 # credits
