@@ -110,18 +110,13 @@ variables you might want to change:
    
    this is the SECRET_KEY for django sessions, crypt signing, etc
    
-3. service_environment.CATCHPY_COMPAT_MODE
-   
-   default is `false` and means json responses will be in *Catchpy
-   WebAnnotation*. Set to `true` to get *AnnotatorJS* as default.
-   
-4. service_admin_user/service_admin_password
+3. service_admin_user/service_admin_password
    
    this is the django admin ui superuser. The provisioning will create this
    user automatically (and as side effect, a consumer key-pair will be
    generated as well). Change to values that make sense to you.
    
-5. service_git_revision
+4. service_git_revision
    
    git branch, tag, or sha to be cloned in the catchpy instance.
 
