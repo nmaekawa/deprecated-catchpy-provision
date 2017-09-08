@@ -20,6 +20,42 @@
       tags:
         - certs
 
+    - name: nginx socket tuning | worker_connections
+      lineinfile:
+        path: /etc/nginx/nginx.conf
+        regexp: '^(.*)worker_connections'
+        line: '\1worker_connections 2048;'
+        backrefs: yes
+        state: present
+        backup: yes
+      notify: restart nginx
+      tags:
+        - socket_tunning
+
+    - name: nginx socket tuning | proxy_connect_timeout
+      lineinfile:
+        path: /etc/nginx/nginx.conf
+        regexp: '( *)proxy_connect_timeout'
+        line: 'proxy_connect_timeout 300s;'
+        state: present
+        insertafter: '^(.*)default_type application\/octet-stream;'
+        backup: yes
+      notify: restart nginx
+      tags:
+        - socket_tunning
+
+    - name: nginx socket tuning | proxy_read_timeout
+      lineinfile:
+        path: /etc/nginx/nginx.conf
+        regexp: '( *)proxy_read_timeout'
+        line: 'proxy_read_timeout 300s;'
+        state: present
+        insertafter: '^(.*)default_type application\/octet-stream;'
+        backup: yes
+      notify: restart nginx
+      tags:
+        - socket_tunning
+
     - name: nginx configuration file
       template:
         src: "service_config.j2"

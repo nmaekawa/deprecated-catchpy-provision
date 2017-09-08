@@ -34,3 +34,52 @@
       apt:
         name: postgresql-client
         state: present
+
+    - name: socket tuning | somaxconn
+      sysctl:
+        name: net.core.somaxconn
+        value: 4096
+        state: present
+      tags:
+        - socket_tunning
+
+    - name: socket tuning | netdev_max_backlog
+      sysctl:
+        name: net.core.netdev_max_backlog
+        value: 65536
+        state: present
+      tags:
+        - socket_tunning
+
+    - name: socket tuning | rmem_default
+      sysctl:
+        name: net.core.rmem_default
+        value: 31457280
+        state: present
+      tags:
+        - socket_tunning
+
+    - name: socket tuning | rmem_max
+      sysctl:
+        name: net.core.rmem_max
+        value: 12582912
+        state: present
+      tags:
+        - socket_tunning
+
+    - name: socket tuning | wmem_default
+      sysctl:
+        name: net.core.wmem_default
+        value: 31457280
+        state: present
+      tags:
+        - socket_tunning
+
+    - name: socket tuning | wmem_max
+      sysctl:
+        name: net.core.wmem_max
+        value: 12582912
+        state: present
+      tags:
+        - socket_tunning
+
