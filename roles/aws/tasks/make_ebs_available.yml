@@ -1,15 +1,26 @@
 ---
 
+    - name: extra-ebs | check that not already mounted
+      shell: "mount | grep -c {{ ebs_mountpoint | mandatory }}"
+      register: already_mounted
+
+    - name: debug | print already_mounted
+      debug:
+          msg: "is it already mounted? {{ already_mounted.stdout }}"
+
     - name: extra-ebs | make filesys on ebs device
       filesystem: fstype=ext4 force=yes
-        dev="{{ ebs_device | mandatory }}"
+          dev="{{ ebs_device | mandatory }}"
+      when: already_mounted.stdout == "0"
 
     - name: extra-ebs | create mount point for ebs
       file: path="{{ ebs_mountpoint | mandatory }}"
         state=directory
+      when: already_mounted.stdout == "0"
 
     - name: extra-ebs | mount ebs volume
       mount: name="{{ ebs_mountpoint | mandatory}}"
         fstype=ext4 state=mounted
         src="{{ ebs_device | mandatory }}"
+      when: already_mounted.stdout == "0"
 

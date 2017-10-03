@@ -8,7 +8,7 @@ hx_rootdir: "/opt/hx"
 
 mount_ebs: false
 ebs_device: "/dev/xvdb"
-ebs_mountdir: "{{ hx_rootdir }}"
+ebs_mountpoint: "{{ hx_rootdir }}"
 
 service_name: catchpy
 service_rootdir: "{{ hx_rootdir }}/{{ service_name }}"
