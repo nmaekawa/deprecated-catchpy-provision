@@ -46,7 +46,7 @@ service_environment:
   DJANGO_SETTINGS_MODULE: "{{ service_name }}.settings.{{ env }}"
   CATCHPY_DJANGO_SECRET_KEY: "nao mais musa que a lira tenho destemperada"
   CATCHPY_STATIC_ROOT: "{{ service_static_rootdir }}"
-  CATCHPY_ALLOWED_HOSTS: "localhost 127.0.0.1 {{ inventory_hostname }}"
+  CATCHPY_ALLOWED_HOSTS: "localhost 127.0.0.1 {{ webserver_dns }}"
   CATCHPY_COMPAT_MODE: "true"
   CATCHPY_DB_NAME: "{{ service_db_name }}"
   CATCHPY_DB_USER: "{{ service_db_user }}"
