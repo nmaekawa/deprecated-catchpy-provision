@@ -1,7 +1,15 @@
 ---
 
+    - name: ensure venv folder exists
+      file:
+        path: "{{ service_venv_dir }}"
+        owner: "{{ service_user }}"
+        group: "{{ service_group }}"
+        mode: 0775
+        state: directory
+
     - name: create venv for service
       become_user: "{{ service_user }}"
       shell: "virtualenv -p $(which python{{ python_version }}) {{ service_venv_dir }}"
       args:
-        creates: "{{ service_venv_dir }}"
+        creates: "{{ service_venv_dir }}/bin/activate"

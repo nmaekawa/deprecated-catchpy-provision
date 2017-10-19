@@ -1,0 +1,27 @@
+---
+
+    - name: create service rootdir
+      file:
+        path: "{{ service_rootdir }}"
+        owner: "{{ service_user }}"
+        group: "{{ service_group }}"
+        mode: 0775
+        state: directory
+
+    - name: create service conf dir
+      file:
+        path: "{{ service_config_dir }}"
+        owner: "{{ service_user }}"
+        group: "{{ service_group }}"
+        mode: 0775
+        state: directory
+
+    - name: create log dir
+      become_user: "{{ service_user }}"
+      file:
+        path: "{{ service_log_dir }}"
+        owner: "{{ service_user }}"
+        group: "{{ service_group }}"
+        mode: 0774
+        state: directory
+

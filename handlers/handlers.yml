@@ -26,3 +26,4 @@
   supervisorctl:
     name: "{{ service_name }}"
     state: restarted
+

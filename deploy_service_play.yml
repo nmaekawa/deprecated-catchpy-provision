@@ -1,0 +1,34 @@
+# deploy new release of a catchpy server
+---
+
+
+- hosts: catchpy
+  remote_user: "{{ remote_user }}"
+  become: yes
+  become_user: root
+  vars_files:
+    - vars/catchpy_vars.yml
+
+  handlers:
+    - include: handlers/handlers.yml
+
+  roles:
+    - webapp_deploy
+    - webapp_config
+
+
+- hosts: catchpy
+  remote_user: "{{ remote_user }}"
+  become: yes
+  become_user: root
+  vars_files:
+    - vars/catchpy_vars.yml
+
+  handlers:
+    - include: handlers/handlers.yml
+
+  roles:
+    - webapp_check_deploy
+
+
+

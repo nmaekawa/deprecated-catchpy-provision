@@ -53,7 +53,7 @@ service_environment:
   CATCHPY_DB_PASSWORD: "{{ service_db_password }}"
   CATCHPY_DB_HOST: "{{ service_db_host }}"
   CATCHPY_DB_PORT: "5432"
-service_admin_user: "dragonman"
+service_admin_user: "user"
 service_admin_password: "password"
 
 nginx_access_log_path: "{{ service_log_dir }}/nginx_access.log"
@@ -63,7 +63,8 @@ nginx_static_dir: "{{ service_static_rootdir }}/"
 nginx_media_dir: "{{ nginx_static_dir }}"
 
 service_git_repo: "https://github.com/nmaekawa/catchpy.git"
-service_git_revision: "master"
+# this has to be a __version__ tag for successful verification:
+service_git_revision: "1.2.3"
 
 # demo certificates!
 ssl_crt: |

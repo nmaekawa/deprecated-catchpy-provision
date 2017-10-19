@@ -1,0 +1,12 @@
+---
+    - name: admin user | create admin user
+      become_user: "{{ service_user }}"
+      environment:
+        CATCHPY_DOTENV_PATH: "{{ service_dotenv_path }}"
+        CATCHPY_ADMIN_USER: "{{ service_admin_user }}"
+        CATCHPY_ADMIN_EMAIL: "{{ service_admin_user }}@catchpy.org"
+        CATCHPY_ADMIN_PASSWORD: "{{ service_admin_password }}"
+      shell: ". {{ service_venv_dir }}/bin/activate && python ./create_super_user.py"
+      args:
+        chdir: "{{ service_install_dir }}"
+

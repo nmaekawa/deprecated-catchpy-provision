@@ -1,85 +1,14 @@
 ---
+    - include: create_dirs.yml
+    - include: install.yml
+    - include: pip_requirements.yml
+    - include: dotenv_path.yml
+    - include: gunicorn.yml
+    - include: socket_tuning.yml
 
-    - name: setup | clone service repo
-      become_user: "{{ service_user }}"
-      git:
-        repo: "{{ service_git_repo }}"
-        dest: "{{ service_install_dir }}"
-        version: "{{ service_git_revision }}"
-        accept_hostkey: yes
-
-    - name: setup | install requirements
-      become_user: "{{ service_user }}"
-      pip:
-        virtualenv: "{{ service_venv_dir }}"
-        chdir: "{{ service_install_dir }}"
-        requirements: "./requirements.txt"
-        state: present
-
-    - name: setup | pip install service package
-      become_user: "{{ service_user }}"
-      shell: ". {{ service_venv_dir }}/bin/activate && pip install -e ."
-      args:
-        chdir: "{{ service_install_dir }}"
-
-    - name: setup | add CATCHPY_DOTENV_PATH to .bashrc
-      become_user: "{{ service_user }}"
-      lineinfile:
-        path: /home/{{ service_user }}/.bashrc
-        line: "export {{ service_name | upper }}_DOTENV_PATH={{ service_dotenv_path }}"
-        backup: yes
-        state: present
-
-    - name: setup | install postgres client
+    - name: install postgres client
       apt:
         name: postgresql-client
         state: present
 
-    - name: socket tuning | somaxconn
-      sysctl:
-        name: net.core.somaxconn
-        value: 4096
-        state: present
-      tags:
-        - socket_tunning
-
-    - name: socket tuning | netdev_max_backlog
-      sysctl:
-        name: net.core.netdev_max_backlog
-        value: 65536
-        state: present
-      tags:
-        - socket_tunning
-
-    - name: socket tuning | rmem_default
-      sysctl:
-        name: net.core.rmem_default
-        value: 31457280
-        state: present
-      tags:
-        - socket_tunning
-
-    - name: socket tuning | rmem_max
-      sysctl:
-        name: net.core.rmem_max
-        value: 12582912
-        state: present
-      tags:
-        - socket_tunning
-
-    - name: socket tuning | wmem_default
-      sysctl:
-        name: net.core.wmem_default
-        value: 31457280
-        state: present
-      tags:
-        - socket_tunning
-
-    - name: socket tuning | wmem_max
-      sysctl:
-        name: net.core.wmem_max
-        value: 12582912
-        state: present
-      tags:
-        - socket_tunning
 

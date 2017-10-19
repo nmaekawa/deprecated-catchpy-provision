@@ -30,38 +30,5 @@
     - aws
 
 
-- hosts: postgres
-  remote_user: "{{ remote_user }}"
-  become: yes
-  become_user: root
-  vars_files:
-    - vars/catchpy_vars.yml
-
-  handlers:
-    - include: handlers/handlers.yml
-
-  roles:
-    - postgresql
-
-
-- hosts: catchpy
-  remote_user: "{{ remote_user }}"
-  become: yes
-  become_user: root
-  vars_files:
-    - vars/catchpy_vars.yml
-
-  handlers:
-    - include: handlers/handlers.yml
-
-  roles:
-    - python_venv
-    - webapp_install
-    - webapp_config
-    - webapp_admin
-    - nginx
-
-
-
 
 

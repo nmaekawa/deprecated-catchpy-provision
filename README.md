@@ -9,7 +9,7 @@ you'll need:
 - vagrant
     - install dns plugin landrush: `$> vagrant plugin install landrush`
 - virtualbox
-- ansible
+- ansible 2.4.0
 
 ## start vagrant instances
 

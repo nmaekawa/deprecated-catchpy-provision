@@ -1,0 +1,13 @@
+---
+
+    - name: config | drop .env file
+      become_user: "{{ service_user }}"
+      template:
+        src: webapp_dotenv.j2
+        dest: "{{ service_dotenv_path }}"
+        owner: "{{ service_user }}"
+        group: "{{ service_group }}"
+        mode: 0744
+      notify:
+        - restart webapp
+

@@ -1,0 +1,11 @@
+---
+
+    - name: clone service repo
+      become_user: "{{ service_user }}"
+      git:
+        repo: "{{ service_git_repo }}"
+        dest: "{{ service_install_dir }}"
+        version: "{{ service_git_revision }}"
+        accept_hostkey: yes
+
+
