@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'EC2: SSH bastion host/instance'
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Parent Stacks
+        Parameters:
+          - ParentVPCStack
+      - Label:
+          default: EC2 Parameters
+        Parameters:
+          - InstanceType
+          - KeyName
+          - Name
+Parameters:
+  ParentVPCStack:
+    Description: Stack name of parent VPC stack based on vpc/vpc-*azs.yaml template.
+    Type: String
+  Name:
+    Description: The name for the EC2 instance
+    Type: String
+    Default: test
+  KeyName:
+    Description: Optional key pair of the ec2-user to establish a SSH connection to
+      the SSH bastion host/instance.
+    Type: String
+    Default: ''
+  InstanceType:
+    Description: Instance type of the SSH bastion host/instance.
+    Type: String
+    Default: t2.nano
+Mappings:
+  RegionMap:
+    ap-south-1:
+      AMI: ami-099fe766
+    eu-west-2:
+      AMI: ami-996372fd
+    eu-west-1:
+      AMI: ami-785db401
+    ap-northeast-2:
+      AMI: ami-d28a53bc
+    ap-northeast-1:
+      AMI: ami-98eb25fe
+    sa-east-1:
+      AMI: ami-10186f7c
+    ca-central-1:
+      AMI: ami-9818a7fc
+    ap-southeast-1:
+      AMI: ami-6f198a0c
+    ap-southeast-2:
+      AMI: ami-e2021d81
+    eu-central-1:
+      AMI: ami-1e339e71
+    us-east-1:
+      AMI: ami-cd0f5cb6
+    us-east-2:
+      AMI: ami-10547475
+    us-west-1:
+      AMI: ami-09d2fb69
+    us-west-2:
+      AMI: ami-6e1a0117
+Conditions:
+  HasKeyName: !Not [!Equals [!Ref 'KeyName', '']]
+Resources:
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub ['SSH bastion host/instance 10.${ClassB}.0.0/16', {ClassB: !ImportValue {
+            'Fn::Sub': '${ParentVPCStack}-ClassB'}}]
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      VpcId: !ImportValue
+        Fn::Sub: ${ParentVPCStack}-VPC
+  BastionInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      EbsOptimized: false
+      ImageId: !FindInMap [RegionMap, !Ref 'AWS::Region', AMI]
+      InstanceType: !Ref 'InstanceType'
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: '0'
+          GroupSet:
+            - !Ref 'SecurityGroup'
+          SubnetId: !ImportValue
+            Fn::Sub: ${ParentVPCStack}-SubnetPublic
+      Tags:
+        - Key: Name
+          Value: !Ref 'Name'
+      KeyName: !If [HasKeyName, !Ref 'KeyName', !Ref 'AWS::NoValue']
+Outputs:
+  TemplateID:
+    Description: hx template id
+    Value: vpc/vpc-ssh-bastion
+  StackName:
+    Description: Stack name
+    Value: !Sub '${AWS::StackName}'
+  SecurityGroup:
+    Description: Use this Security Group to reference incoming traffic from the SSH
+      bastion host/instance.
+    Value: !Ref 'SecurityGroup'
+    Export:
+      Name: !Sub '${AWS::StackName}-SecurityGroup'

@@ -9,9 +9,7 @@
                         "default": "Parent Stacks"
                     },
                     "Parameters": [
-                        "ParentVPCStack",
-                        "ParentAlertStack",
-                        "ParentZoneStack"
+                        "ParentVPCStack"
                     ]
                 },
                 {
