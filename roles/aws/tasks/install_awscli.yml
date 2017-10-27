@@ -1,6 +1,6 @@
 ---
 
-    - name: install boto for aws modules
+    - name: install boto and aws client
       pip:
         name: "{{ item }}"
         state: present
@@ -8,3 +8,5 @@
         - boto
         - boto3
         - botocore
+        - awscli
+

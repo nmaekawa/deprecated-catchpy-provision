@@ -1,10 +1,10 @@
 ---
 
     - include_tasks: get_instance_id.yml
-    - include_tasks: create_iam_instance_profile.yml
-      #- include_tasks: create_iam_role.yml
+    - include_tasks: create_iam_instance_profile.yml permission_name=ec2_cloudwatch_put_read_list
+
       #- include: create_cloudwatch_user.yml
-      # - include: create_dirs
+      #- include: create_dirs
       #- include: copy_metric_scripts.yml
-      # - include: set_cronjobs.yml
+      #- include: set_cronjobs.yml
 
