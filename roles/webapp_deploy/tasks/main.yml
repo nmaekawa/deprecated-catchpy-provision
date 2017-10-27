@@ -9,6 +9,7 @@
         accept_hostkey: yes
         clone: no
         update: yes
+        force: yes
       notify:
          - restart webapp
          - restart nginx

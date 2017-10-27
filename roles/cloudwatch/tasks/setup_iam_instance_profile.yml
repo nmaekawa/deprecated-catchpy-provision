@@ -1,0 +1,39 @@
+---
+    - name: create or fetch instance profile
+      become: no
+      local_action: >
+        shell {{ role_path }}/files/create_instance_profile.sh
+        {{ lookup('env', 'AWS_PROFILE') }}
+        {{ role_path }}/files {{ permission_name }}
+      register: policy_result
+
+    - debug:
+        var: policy_result
+
+    - name: check for instance profile associations
+      become: no
+      local_action: |
+        shell aws ec2 describe-iam-instance-profile-associations \
+        --filters Name=instance-id,Values={{ ansible_ec2_instance_id }}
+      register: assoc_result
+
+    - set_fact:
+        instance_profile_assoc: "{{ assoc_result.stdout | from_json }}"
+
+    - set_fact:
+        instance_profile_name: "{{ instance_profile_assoc.IamInstanceProfileAssociations[0].IamInstanceProfile.Arn | basename }}"
+      when: instance_profile_assoc.IamInstanceProfileAssociations[0] is defined
+
+    - fail:
+        msg: >
+            host {{ inventory_hostname }} is associated with instance profile
+            named {{ instance_profile_name }}, expected {{ instance_profile_name_for_cloudwatch }}
+      when: instance_profile_name is defined and instance_profile_name != instance_profile_name_for_cloudwatch
+
+    - name: associate instance profile to instance
+      become: no
+      local_action: |
+          shell aws ec2 associate-iam-instance-profile \
+          --instance-id {{ ansible_ec2_instance_id }} \
+          --iam-instance-profile Name={{ permission_name }}_instance_profile
+      when: instance_profile_name is not defined

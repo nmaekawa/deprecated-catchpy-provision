@@ -1,0 +1,20 @@
+---
+
+    - name: set cronjob for disk space
+      cron:
+        name: "disk_metrics"
+        user: "cloudwatch"
+        minute: "*/5"
+        state: present
+        job: >
+            {{ hx_rootdir }}/bin/disk_free_metric.sh "type ext|type xfs" 2>&1 | logger -t info
+
+    - name: set cronjob for webapp availability
+      cron:
+        name: "{{ service_name }}_availability"
+        user: "cloudwatch"
+        minute: "*/5"
+        state: present
+        job: >
+            {{ hx_rootdir }}/bin/{{ service_name }}_response_time_metric.sh 2>&1 | logger -t info
+      when: "'catchpy' in group_names"
