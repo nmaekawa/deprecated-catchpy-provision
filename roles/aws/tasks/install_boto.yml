@@ -1,0 +1,10 @@
+---
+
+    - name: install boto for aws modules
+      pip:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - boto
+        - boto3
+        - botocore

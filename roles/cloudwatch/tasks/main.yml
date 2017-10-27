@@ -1,0 +1,10 @@
+---
+
+    - include_tasks: get_instance_id.yml
+    - include_tasks: create_iam_instance_profile.yml
+      #- include_tasks: create_iam_role.yml
+      #- include: create_cloudwatch_user.yml
+      # - include: create_dirs
+      #- include: copy_metric_scripts.yml
+      # - include: set_cronjobs.yml
+

@@ -1,0 +1,11 @@
+---
+
+    - name: copy scripts
+      template:
+        src: "{{ item }}"
+        dest: "{{ hx_rootdir }}/bin/{{ item }}"
+        owner: "cloudwatch"
+        group: "cloudwatch"
+        mode: "0776"
+      with_fileglob:
+        - "../templates/*"

@@ -1,0 +1,13 @@
+---
+
+    - name: create instance profile
+      become: no
+      local_action: |
+        shell {{ role_path }}/files/create_cloudwatch_instance_profile.sh \
+        {{ lookup('env', 'AWS_PROFILE') }} file:/{{ role_path }}/files/cloudwatch_put_metric_policy.json
+      register: policy_result
+
+    - debug:
+        var: policy_result
+
+

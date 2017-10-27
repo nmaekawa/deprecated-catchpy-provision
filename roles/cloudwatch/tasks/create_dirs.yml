@@ -1,0 +1,10 @@
+---
+
+    - name: ensure hx global bin folder
+      file:
+        path: "{{ hx_rootdir }}/bin"
+        owner: "cloudwatch"
+        group: "cloudwatch"
+        mode: 0775
+        state: directory
+

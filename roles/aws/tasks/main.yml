@@ -2,3 +2,5 @@
 
     - import_tasks: make_ebs_available.yml
       when: mount_ebs is defined and mount_ebs == true
+
+    - import_tasks: install_boto.yml
