@@ -4,8 +4,8 @@
       cron:
         name: "disk_metrics"
         user: "cloudwatch"
-        minute: */5
+        minute: "*/5"
         state: present
         job: >
-            {{ hx_rootdir }}/bin/disk_free_metric.sh \
+            {{ hx_rootdir }}/bin/disk_free_metric.sh
             "{{ ansible_ec2_instance_id }}" "type ext|type xfs" 2>&1 | logger -t info

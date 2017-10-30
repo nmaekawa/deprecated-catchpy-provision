@@ -6,5 +6,6 @@ mount_ebs: false
 ebs_device: "/dev/xvdb"
 ebs_mountpoint: "{{ hx_rootdir }}"
 
-cloudwatch_user: "claudwatch"
+cloudwatch_user: "cloudwatch"
 cloudwatch_group: "{{ cloudwatch_user }}"
+cloudwatch_prefix: "ec2_cloudwatch_put_read_list"

@@ -3,9 +3,9 @@
     - name: copy scripts
       template:
         src: "{{ item }}"
-        dest: "{{ hx_rootdir }}/bin/{{ item }}"
+        dest: "{{ hx_rootdir }}/bin/{{ item | basename }}"
         owner: "root"
         group: "root"
-        mode: "0776"
+        mode: "0775"
       with_fileglob:
         - "../templates/*"
