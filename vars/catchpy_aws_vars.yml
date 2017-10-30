@@ -1,0 +1,10 @@
+---
+
+aws: true
+
+mount_ebs: false
+ebs_device: "/dev/xvdb"
+ebs_mountpoint: "{{ hx_rootdir }}"
+
+cloudwatch_user: "claudwatch"
+cloudwatch_group: "{{ cloudwatch_user }}"

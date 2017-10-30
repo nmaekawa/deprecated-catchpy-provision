@@ -6,4 +6,6 @@
         user: "cloudwatch"
         minute: */5
         state: present
-        job: '/opt/hx/bin/disk_free_metric.sh "{{ ansible_ec2_instance_id }}" "type ext|type xfs" 2>&1 | logger -t info'
+        job: >
+            {{ hx_rootdir }}/bin/disk_free_metric.sh \
+            "{{ ansible_ec2_instance_id }}" "type ext|type xfs" 2>&1 | logger -t info

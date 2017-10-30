@@ -6,10 +6,6 @@ postgres_version: 9.6
 
 hx_rootdir: "/opt/hx"
 
-mount_ebs: false
-ebs_device: "/dev/xvdb"
-ebs_mountpoint: "{{ hx_rootdir }}"
-
 service_name: catchpy
 service_rootdir: "{{ hx_rootdir }}/{{ service_name }}"
 service_user: "{{ service_name }}"

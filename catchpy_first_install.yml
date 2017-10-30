@@ -17,17 +17,19 @@
   become_user: root
   vars_files:
     - vars/catchpy_vars.yml
+    - vars/catchpy_aws_vars.yml
     - vars/users_public_keys.yml
 
   handlers:
     - include: handlers/handlers.yml
 
-  roles:
-    - apt
-    - timedate
-    - python_setup
-    - user_account
-    - aws
+  tasks:
+    - import_role: apt
+    - import_role: timedate
+    - import_role: python_setup
+    - import_role: user_account
+    - import_role: roles/aws/setup_ebs_volumes.yml
+      when: aws is defined and aws == true
 
 
 - hosts: postgres
@@ -40,8 +42,8 @@
   handlers:
     - include: handlers/handlers.yml
 
-  roles:
-    - postgresql
+  tasks:
+    - import_role: postgresql
 
 
 - hosts: catchpy
@@ -54,12 +56,12 @@
   handlers:
     - include: handlers/handlers.yml
 
-  roles:
-    - python_venv
-    - webapp_install
-    - webapp_config
-    - webapp_admin
-    - nginx
+  tasks:
+    - import_role: python_venv
+    - import_role: webapp_install
+    - import_role: webapp_config
+    - import_role: webapp_admin
+    - import_role: nginx
 
 
 

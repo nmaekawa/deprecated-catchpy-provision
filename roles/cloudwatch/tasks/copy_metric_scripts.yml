@@ -4,8 +4,8 @@
       template:
         src: "{{ item }}"
         dest: "{{ hx_rootdir }}/bin/{{ item }}"
-        owner: "cloudwatch"
-        group: "cloudwatch"
+        owner: "root"
+        group: "root"
         mode: "0776"
       with_fileglob:
         - "../templates/*"

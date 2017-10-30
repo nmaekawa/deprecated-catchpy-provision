@@ -3,5 +3,5 @@
       include_tasks: ../../user_account/tasks/setup_user.yml
       args:
         user:
-            name: "cloudwatch"
-            group: "cloudwatch"
+            name: "{{ cloudwatch_user }}"
+            group: "{{ cloudwatch_group }}"
