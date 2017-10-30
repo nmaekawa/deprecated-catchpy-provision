@@ -1,0 +1,35 @@
+# install scripts for monitoring ec2 instances
+---
+
+# https://gist.github.com/gwillem/4ba393dceb55e5ae276a87300f6b8e6f
+# https://stackoverflow.com/questions/32429259/ansible-fails-with-bin-sh-1-usr-bin-python-not-found/41429731
+- hosts: all
+  remote_user: "{{ remote_user }}"
+  become: yes
+  become_user: root
+  gather_facts: False
+
+  tasks:
+  - name: install python2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+
+- hosts: all
+  remote_user: "{{ remote_user }}"
+  become: yes
+  become_user: root
+  vars_files:
+    - vars/catchpy_vars.yml
+    - vars/catchpy_aws_vars.yml
+
+  handlers:
+    - include_tasks: handlers/handlers.yml
+
+  roles:
+    - aws
+    - role: cloudwatch
+      permission_name: ec2_cloudwatch_put_read_list
+
+
+
+
