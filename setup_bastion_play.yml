@@ -17,18 +17,16 @@
   become_user: root
   vars_files:
     - vars/catchpy_vars.yml
+    - vars/catchpy_aws_vars.yml
     - vars/users_public_keys.yml
 
   handlers:
     - include: handlers/handlers.yml
 
-  roles:
-    - apt
-    - timedate
-    - python_setup
-    - user_account
-    - aws
-
-
-
-
+  tasks:
+    - import_role: apt
+    - import_role: timedate
+    - import_role: python_setup
+    - import_role: user_account
+    - import_tasks: roles/aws/tasks/setup_ebs_volumes.yml
+      when: aws is defined and aws == true
