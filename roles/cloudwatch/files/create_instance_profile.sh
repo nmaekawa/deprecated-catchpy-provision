@@ -1,4 +1,5 @@
 #!/bin/bash
+# run this from ansible provisioning host (local
 
 ERROR_CREATING_ROLE=10
 ERROR_CREATING_POLICY=11

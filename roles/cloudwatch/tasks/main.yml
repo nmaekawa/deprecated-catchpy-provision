@@ -1,7 +1,8 @@
 ---
+    - include_tasks: set_instance_facts.yml
+    - include_tasks: setup_iam_instance_profile.yml
+    #- include_tasks: test_associations.yml permission_name=ec2_cloudwatch_put_read_list
 
-    - include_tasks: get_instance_id.yml
-    - include_tasks: create_iam_instance_profile.yml permission_name=ec2_cloudwatch_put_read_list
 
       #- include: create_cloudwatch_user.yml
       #- include: create_dirs
