@@ -2,10 +2,15 @@
 
 aws: true
 
-mount_ebs: false
+mount_ebs: true
 ebs_device: "/dev/xvdb"
 ebs_mountpoint: "{{ hx_rootdir }}"
 
 cloudwatch_user: "cloudwatch"
 cloudwatch_group: "{{ cloudwatch_user }}"
 cloudwatch_prefix: "ec2_cloudwatch_put_read_list"
+
+# consumer-secret pair for jwt
+cloudwatch_api_key: "cloudwatch_consumer"
+cloudwatch_secret_key: "cloudwatch_secret"
+

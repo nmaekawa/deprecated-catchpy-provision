@@ -15,6 +15,6 @@ if len(sys.argv) != 4:
 token_enc = encode_catchjwt(
     apikey=sys.argv[1],
     secret=sys.argv[2],
-    user=sys.argv[3])
+    user=sys.argv[3])  # default ttl = 60s
 print('{}'.format(
     token_enc.decode('utf-8') if type(token_enc) == type(b'') else token_enc))

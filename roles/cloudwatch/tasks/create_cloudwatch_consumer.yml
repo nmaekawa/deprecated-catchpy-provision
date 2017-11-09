@@ -1,0 +1,15 @@
+---
+
+    - name: create consumer for cloudwatch
+      become_user: "{{ service_user }}"
+      environment:
+        CATCHPY_DOTENV_PATH: "{{ service_dotenv_path }}"
+      django_manage:
+        app_path: "{{ service_install_dir }}"
+        virtualenv: "{{ service_venv_dir }}"
+        command: |
+            create_consumer_pair --consumer {{ cloudwatch_api_key }} \
+                --secret {{ cloudwatch_secret_key }} \
+                --expire_in_weeks 500 \
+                --force-update
+

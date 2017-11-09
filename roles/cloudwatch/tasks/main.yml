@@ -4,5 +4,6 @@
     - include_tasks: create_cloudwatch_user.yml
     - include_tasks: create_dirs.yml
     - include_tasks: copy_metric_scripts.yml
+    - include_tasks: create_cloudwatch_consumer.yml
     - include_tasks: set_cronjobs.yml
 
