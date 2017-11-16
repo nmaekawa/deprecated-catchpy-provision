@@ -14,8 +14,7 @@
 
   roles:
     - webapp_deploy
-    - webapp_config
-
+    - { role: webapp_config, when: update_configs is defined and update_configs == True}
 
 - hosts: catchpy
   remote_user: "{{ remote_user }}"
@@ -28,7 +27,7 @@
     - include: handlers/handlers.yml
 
   roles:
+    # have to set this as a separate list of roles because of handlers
+    # that need to run after a deploy/config block
     - webapp_check_deploy
-
-
 
