@@ -1,4 +1,9 @@
 # install scripts for monitoring ec2 instances
+#
+#
+# this playbook requirems awscli locally installed!
+# and implies aws = true
+#
 ---
 
 # https://gist.github.com/gwillem/4ba393dceb55e5ae276a87300f6b8e6f
@@ -26,8 +31,7 @@
     - include_tasks: handlers/handlers.yml
 
   tasks:
-      #- import_tasks: roles/aws/tasks/setup_ebs_volumes.yml
-      #- import_tasks: roles/aws/tasks/install_awscli.yml
+    - import_tasks: roles/aws/tasks/setup_ebs_volumes.yml
     - import_role:
         name: cloudwatch
       vars:

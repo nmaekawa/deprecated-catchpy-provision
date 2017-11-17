@@ -54,82 +54,12 @@ service_admin_password: "password"
 
 nginx_access_log_path: "{{ service_log_dir }}/nginx_access.log"
 nginx_error_log_path: "{{ service_log_dir }}/nginx_error.log"
-nginx_ssl_dest_dir: "/etc/ssl"
+nginx_ssl_dest_dir: "/etc/ssl/certs"
 nginx_static_dir: "{{ service_static_rootdir }}/"
 nginx_media_dir: "{{ nginx_static_dir }}"
 
 service_git_repo: "https://github.com/nmaekawa/catchpy.git"
-# this has to be a __version__ tag for successful verification:
-service_git_revision: "1.2.3"
-
-# demo certificates!
-ssl_crt: |
-  -----BEGIN CERTIFICATE-----
-  MIIDFDCCAfwCCQC4ttcqCS67LTANBgkqhkiG9w0BAQsFADBMMQswCQYDVQQGEwJV
-  UzETMBEGA1UECAwKU29tZS1TdGF0ZTETMBEGA1UECgwKaHggdGVjaG9wczETMBEG
-  A1UEAwwKY2F0Y2hweS52bTAeFw0xNzA3MjgxNTQxNTRaFw0xODA3MjgxNTQxNTRa
-  MEwxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApTb21lLVN0YXRlMRMwEQYDVQQKDApo
-  eCB0ZWNob3BzMRMwEQYDVQQDDApjYXRjaHB5LnZtMIIBIjANBgkqhkiG9w0BAQEF
-  AAOCAQ8AMIIBCgKCAQEAyS9JCinyeonpjOw+BkrhWGDigJvqiAp8bzujuBBzWjd1
-  vBM+WVkkw0xIS30Q/BRslkX7Qszc9tfHd20QzgRBJ1CqmMUFtOOrsST8IQoXGu3N
-  RtwiP3KSqXg3NQJ6oTVDGVyML3EYhfvajz3iRTdv71sX3higl+QZLG5f79TfD6OF
-  j87wo9zbgUb0n1CMFkxY9e1dL0mTSmUzAwMidHiuqDCXBXeQVQ/aFWIYo/oi8xmn
-  kxFGDA1L1m6o/0V47uuNNlp9RbhNFM/mwxU2DQsKdp/X1RX2JGKRlbFHqO9SlQ5b
-  Gor8hWZ6jfv0DLcKGtkLPqmfYw2Qux6uolq7XNE+pQIDAQABMA0GCSqGSIb3DQEB
-  CwUAA4IBAQAwBF5ottlPG+0/PpaRSznWFRvH+48k+mukDYFD7GQ9hZ4t16cFGkK/
-  dqbOzNkN7cSbEi9Jasr8XVY3gyuwN8ymrZ6J5IO2FuyWJFiDuqmW1yUqDo6OnEzS
-  ePiWUaIjuefBL9Q4luAiQn51XGMVvioI2xC8eflps85hz2tOgVDdnttAyoOwiVWA
-  q0JCZLMJbEzXhd4qGVXQFV0vukvIHVO3L8IR+Yy5SD+qc8XX51RX341Age0d9mvx
-  GDmkd8h34CzMsxee+EnDzpVBD47bdTo7SCmSf/clyftIlWf5bo7cmFRvOOCP3Gkv
-  UeAZwafevNhavOvSVbrmg6uEM9oDpnu+
-  -----END CERTIFICATE-----
-
-ssl_key: |
-  -----BEGIN RSA PRIVATE KEY-----
-  MIIEpAIBAAKCAQEAyS9JCinyeonpjOw+BkrhWGDigJvqiAp8bzujuBBzWjd1vBM+
-  WVkkw0xIS30Q/BRslkX7Qszc9tfHd20QzgRBJ1CqmMUFtOOrsST8IQoXGu3NRtwi
-  P3KSqXg3NQJ6oTVDGVyML3EYhfvajz3iRTdv71sX3higl+QZLG5f79TfD6OFj87w
-  o9zbgUb0n1CMFkxY9e1dL0mTSmUzAwMidHiuqDCXBXeQVQ/aFWIYo/oi8xmnkxFG
-  DA1L1m6o/0V47uuNNlp9RbhNFM/mwxU2DQsKdp/X1RX2JGKRlbFHqO9SlQ5bGor8
-  hWZ6jfv0DLcKGtkLPqmfYw2Qux6uolq7XNE+pQIDAQABAoIBAQC30BIlzSmUOAlB
-  Dl+lFClLvEl2Q/5GiX4jixQMiks6dE2HpvViYQYrwbiT8BLini6QJiRpZg/FIGVI
-  gkfGUzDMIPGdXvXVzeYClc4eyb9OhVL2mQ5Zde72E7YtIrS0MZu6wkn61pQXZoLM
-  OThREVOeF1Z5P3sLDAbMB5Rz5cRf3eCJWruM0NN4Uduxhr1VNRd7NFmd2g0cA6ZM
-  17G5qBPMjeHr4jJE/PbmG5slLeaCCBwPmFUH7C6Y4blyQkdNoMrOetZT1RmWMtzX
-  qX2q/Qy6QZdX+HKB5Z8xVRG+eNT4QCE/ujg3HjWerzbYFM4YtqWb6jRGAszoG3fE
-  RAAELXyJAoGBAPyMuk1vPFsrU12JqDk3LGy3qDcgfstNGnVqKQjbwHulIpQB0EkK
-  /ZMfo5yLu49NgDh9TPhttg64pmlVvdNj6FO3cjBwk3Do6IAMOwedHQSX6TLKI7el
-  RAP5omM+h7psUij0f57RGmOLf7ccJPW/uTeXcq5A9oLF9N5YSyQJLXPzAoGBAMvu
-  6Z+f79ebqOzcCEjm07ujwmM2L8uY+L8VMlC5z8jTjo1+gnm7yDp616lIKrBpaq/O
-  gxEsIdZXN03UsfC9Ct340Qnpa5GEpmCJ1NB9CPNKz29YmtP8wShUrydep0yz9AjD
-  hEgxia10r2YmDo9k8ifvau3zjW1AZka8KacKzGEHAoGAR4x7D4sPF2kr4hkozqTh
-  8h8KCiwrn99FOrSL0ZWob582L6Zf4wG5G2BgUu6Hga7cP6TIFK3IYV1Q0BDZibUJ
-  UgZr1GtgaiGiFPziEGMjoHSFPb1k5xdsMJAdwG4rt9YOZMn4Cf+FsWQJF9BibDkX
-  +Tbv54xCCoSYvhFXoGr1NJ8CgYBGwe93fhPGuHClNjb9rHFckpY4vC1bNAliq2UY
-  00+/+39jorh8qmXvvH2lc6+0I+9rbnjVdX2MFBjRPXI7+CuUFufYy4+SHvdnWYto
-  h2mamKNem9yknvcaGj/nphTgLTQH8mascdu2Pl05UQ0OPdUzfAOa6j1w4b5a3qCJ
-  H9sH8wKBgQCjr7ssg4V96B2TsC1uDVTci23otZ3ATRL/JhbsftzaMCBpeP6ew9bp
-  YrXzbdZW5EUY2/cL8aI9tOpYKIcK5m43iDCOjhXCAcygwLjK+XcsQR/lmZ0Iqkqr
-  ugVN+lnZydcUWVKHdIEapqx4fChNTzW048gS/LePhHEOOlxDbwfXaw==
-  -----END RSA PRIVATE KEY-----
-
-ssl_csr: |
-  -----BEGIN CERTIFICATE REQUEST-----
-  MIICkTCCAXkCAQAwTDELMAkGA1UEBhMCVVMxEzARBgNVBAgMClNvbWUtU3RhdGUx
-  EzARBgNVBAoMCmh4IHRlY2hvcHMxEzARBgNVBAMMCmNhdGNocHkudm0wggEiMA0G
-  CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDJL0kKKfJ6iemM7D4GSuFYYOKAm+qI
-  CnxvO6O4EHNaN3W8Ez5ZWSTDTEhLfRD8FGyWRftCzNz218d3bRDOBEEnUKqYxQW0
-  46uxJPwhChca7c1G3CI/cpKpeDc1AnqhNUMZXIwvcRiF+9qPPeJFN2/vWxfeGKCX
-  5Bksbl/v1N8Po4WPzvCj3NuBRvSfUIwWTFj17V0vSZNKZTMDAyJ0eK6oMJcFd5BV
-  D9oVYhij+iLzGaeTEUYMDUvWbqj/RXju6402Wn1FuE0Uz+bDFTYNCwp2n9fVFfYk
-  YpGVsUeo71KVDlsaivyFZnqN+/QMtwoa2Qs+qZ9jDZC7Hq6iWrtc0T6lAgMBAAGg
-  ADANBgkqhkiG9w0BAQsFAAOCAQEAdSzBO6pGU2LXiUx2LpUK1tDrDEH/G7GYC82h
-  InBOZ63Ys3dSkLkrRDH42x4WjWMvetft22ecrFDpibXWUycIfIcLoD+NIk/3oQKV
-  8X9MrCLz/bUor9jd/g8E6AJDtfoWpKt4eKZdVTPWtgubjrf70Abr07I6nA6tGCgd
-  /l9d+SffKIUDLX5Dq5GIiHe/Hx9qTBmYxf3H+HyZ4o0zRlVPW7iG123iluCpnNaX
-  UAiIoHC8gEPNsWpPFXXY9h43uaR46Oyu7MBj/L5d4F4vk6z+g5tnN3lIPjPJEym9
-  m2z8Dme+avHCjJ35wYhijbRtQmXGg3wxf/aJI6s66Vk1tSk9nA==
-  -----END CERTIFICATE REQUEST-----
-
-
+# this has to be a __version__ tag for successful verification in DEPLOYMENT:
+# you can use " master" when installing for the first time
+service_git_revision: "master"
 

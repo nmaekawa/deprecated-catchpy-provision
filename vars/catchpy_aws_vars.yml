@@ -2,7 +2,6 @@
 
 aws: true
 
-mount_ebs: true
 ebs_device: "/dev/xvdb"
 ebs_mountpoint: "{{ hx_rootdir }}"
 

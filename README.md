@@ -1,4 +1,4 @@
-# catchpy-provision
+= # catchpy-provision =
 ansible provisioning for catchpy backend service
 
 # for local vagrant catchpy
@@ -40,16 +40,16 @@ from the catchpy repo, you can login into each box like below:
 
 ## provision the instances
 
-the ansible playbook.yml will provision both instances; to run:
+the ansible catchpy_first_install.yml will provision both instances; to run:
 
     $> cd ../catchpy-provision
     
     # set vagrant insecure key in your env
     $> ssh-add ~/.vagrant.d/insecure_private_key
-    $> ansible-playbook -i hosts/vagrant.ini playbook.yml
+    $> ansible-playbook -i hosts/vagrant.ini catchpy_first_install.yml
     
     # or specify it in the command line
-    $> ansible-playbook -i hosts/vagrant.ini --private-key ~/.vagrant.d/insecure_private_key playbook.ym
+    $> ansible-playbook -i hosts/vagrant.ini --private-key ~/.vagrant.d/insecure_private_key catchpy_first_install.ym
 
 
 the default configuration:
@@ -61,7 +61,7 @@ the default configuration:
   `/opt/hx/catchpy/venvs/catchpy/bin/gunicorn_start`
 - gunicorn is configured to talk to nginx via a socket at
   `/opt/hx/catchpy/venvs/run/gunicorn.sock`
-- django admin user is 'dragonman:password'
+- django admin user is 'user:password'
 - nginx for dev env uses HTTP (HTTPS will require certs that can be verified)
 
 if all goes well, you should be able to check it out at

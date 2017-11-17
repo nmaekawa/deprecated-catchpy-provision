@@ -1,0 +1,23 @@
+---
+    - name: nginx configuration file
+      template:
+        src: "service_config.j2"
+        dest: /etc/nginx/sites-available/{{ service_name }}
+        backup: yes
+      notify: restart nginx
+      tags:
+        - nginx_config
+
+    - name: ensure default site is disabled
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: restart nginx
+
+    - name: ensure service site is enabled
+      file:
+        src: /etc/nginx/sites-available/{{ service_name }}
+        dest: /etc/nginx/sites-enabled/{{ service_name }}
+        state: link
+      notify: restart nginx
+

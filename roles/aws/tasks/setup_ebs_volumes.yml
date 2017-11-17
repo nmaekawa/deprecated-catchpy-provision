@@ -1,5 +1,6 @@
 ---
 
+    - import_tasks: check_extra_ebs_exists.yml
     - import_tasks: make_ebs_available.yml
-      when: mount_ebs is defined and mount_ebs == true
+      when: "ebs_device_exists == 1 and ebs_already_mounted == 0"
 

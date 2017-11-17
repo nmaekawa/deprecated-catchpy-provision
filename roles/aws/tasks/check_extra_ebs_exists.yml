@@ -1,0 +1,23 @@
+---
+
+    - name: extra-ebs | check that the extra volume exists
+      shell: "/bin/lsblk | grep -c {{ ebs_device | basename }}"
+      ignore_errors: true
+      register: extra_volume_device
+
+    - set_fact:
+        ebs_device_exists: "{{ extra_volume_device.stdout }}"
+
+    - name: extra-ebs | check that not already mounted
+      shell: "/bin/mount | grep -c {{ ebs_mountpoint | mandatory }}"
+      ignore_errors: true
+      register: already_mounted
+
+    - set_fact:
+        ebs_already_mounted: "{{ already_mounted.stdout }}"
+
+    - debug:
+        msg: "ALREADY MOUNTED: {{ ebs_already_mounted }}"
+
+    - debug:
+        msg: "DEVICE EXISTS: {{ ebs_device_exists }}"
