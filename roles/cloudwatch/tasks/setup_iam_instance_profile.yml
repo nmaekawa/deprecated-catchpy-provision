@@ -1,11 +1,10 @@
 ---
     - name: create or fetch instance profile
       become: no
-      local_action: |
-        shell {{ role_path }}/files/create_instance_profile.sh \
-        {{ lookup('env', 'AWS_PROFILE') }} \
-        {{ role_path }}/files \
-        {{ permission_name }}
+      local_action: >
+        shell {{ role_path }}/files/create_instance_profile.sh
+        {{ lookup('env', 'AWS_PROFILE') }}
+        {{ role_path }}/files {{ permission_name }}
       register: policy_result
 
     - debug:

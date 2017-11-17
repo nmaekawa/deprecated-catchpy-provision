@@ -2,8 +2,7 @@
 
 . {{ hx_rootdir }}/bin/custom_metrics_shared.sh
 
-instance_id="$1"
-filesystem_type="$2"
+filesystem_type="$1"
 metric_name=""
 
 local_file_systems=$(mount | grep -E "$filesystem_type" | cut -f3 -d' ')

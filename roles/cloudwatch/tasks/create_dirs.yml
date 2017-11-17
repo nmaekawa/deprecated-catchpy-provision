@@ -8,3 +8,11 @@
         mode: 0755
         state: directory
 
+    - name: ensure tmp global bin folder
+      file:
+        path: "{{ hx_rootdir }}/tmp"
+        owner: "root"
+        group: "root"
+        mode: 0755
+        state: directory
+

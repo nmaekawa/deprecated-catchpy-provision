@@ -13,7 +13,8 @@ PERMISSION_NAME=${3:-ec2_cloudwatch_put_read_list}
 IAM_PATH=${4:-/hx/catchpy/}
 
 echo "permission name is $PERMISSION_NAME"
-echo "iab path is $IAM_PATH"
+echo "iam path is $IAM_PATH"
+echo "$AWS_PROFILE"
 
 # check if instance_profile already exist
 INSTANCE_PROFILE=$(aws iam get-instance-profile \
@@ -30,7 +31,7 @@ POLICY=$(aws iam create-policy \
     --path "${IAM_PATH}" \
     --description "${PERMISSION_NAME}" \
     --policy-document "file://${DOCUMENT_PATH}/${PERMISSION_NAME}_managed_policy.json" \
-    --profile "${AWS_PROFILE}" )
+    --profile "${AWS_PROFILE}")
 if [ $? -ne 0 ]; then
     exit $ERROR_CREATING_POLICY
 fi
