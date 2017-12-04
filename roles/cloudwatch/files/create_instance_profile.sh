@@ -14,7 +14,8 @@ IAM_PATH=${4:-/hx/catchpy/}
 
 echo "permission name is $PERMISSION_NAME"
 echo "iam path is $IAM_PATH"
-echo "$AWS_PROFILE"
+echo "aws_profile is $AWS_PROFILE"
+echo "document_path is $DOCUMENT_PATH"
 
 # check if instance_profile already exist
 INSTANCE_PROFILE=$(aws iam get-instance-profile \
