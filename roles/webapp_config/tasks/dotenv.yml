@@ -8,6 +8,7 @@
         owner: "{{ service_user }}"
         group: "{{ service_group }}"
         mode: 0744
+        backup: yes
       notify:
         - restart webapp
 

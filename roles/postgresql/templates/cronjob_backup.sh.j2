@@ -28,6 +28,7 @@ fi
 
 # copy to s3
 # STANDARD_IA == infrequent access
+# BEWARE that dev|prod will name backups the same and might overwrite!!!!
 #aws s3 cp /tmp/${NOW}_${DB_NAME}.pgdump s3://${S3_PATH}/${NOW}_${DB_NAME}.pgdump --storage-class STANDARD_IA
 
 #if [ $? -ne 0 ]; then

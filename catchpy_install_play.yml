@@ -1,10 +1,12 @@
 # initial playbook to provision a catchpy server
 ---
 - hosts: all
-  remote_user: "{{ remote_user }}"
+  remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
   gather_facts: False
+  vars_files:
+    - vars/catchpy_vars.yml
 
   tasks:
   - name: install python2
@@ -12,12 +14,11 @@
 
 
 - hosts: all
-  remote_user: "{{ remote_user }}"
+  remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
   vars_files:
     - vars/catchpy_vars.yml
-    - vars/catchpy_aws_vars.yml
     - vars/users_public_keys.yml
 
   handlers:
@@ -35,7 +36,7 @@
 
 
 - hosts: postgres
-  remote_user: "{{ remote_user }}"
+  remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
   vars_files:
@@ -49,7 +50,7 @@
 
 
 - hosts: catchpy
-  remote_user: "{{ remote_user }}"
+  remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
   vars_files:

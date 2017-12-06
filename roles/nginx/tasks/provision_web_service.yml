@@ -17,6 +17,7 @@
     # config:
     #   webserver_dns
     #
-    - include_tasks: provision_web_service.yml
-    - include_tasks: config_web_service.yml
+    - include_tasks: install_packages.yml
+    - include_tasks: setup_config.yml
+    - include_tasks: tuning.yml
 

@@ -1,19 +1,19 @@
 ---
-    - name: copy ssl cert to service host
+    - name: copy ssl cert dir to service host
       copy:
-        src: "{{ playbook_dir }}/vars/{{ service_name }}_harvardx_harvard_edu_bundle.crt"
-        dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}_harvardx_harvard_edu.crt"
+        src: "{{ item }}"
+        dest: "{{ nginx_ssl_dest_dir }}/{{ item | basename }}"
         mode: 0644
-      notify: restart nginx
-      tags:
-        - certs
+      with_fileglob:
+        - "{{ local_certs_dir }}/*.crt"
+      when: enable_ssl == 'true'
 
-    - name: copy ssl private key to service host
+    - name: copy ssl private_key to service host
       copy:
-        src: "{{ playbook_dir }}/vars/{{ service_name }}_harvardx_harvard_edu.key"
-        dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}_harvardx_harvard_edu.key"
+        src: "{{ item }}"
+        dest: "{{ nginx_ssl_dest_dir }}/{{ item | basename }}"
         mode: 0600
-      notify: restart nginx
-      tags:
-        - certs
+      with_fileglob:
+        - "{{ local_certs_dir }}/*.key"
+      when: enable_ssl == 'true'
 

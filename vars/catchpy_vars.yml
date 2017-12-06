@@ -20,9 +20,10 @@ service_bin_dir: "{{ service_rootdir }}/bin"
 service_venv_dir: "{{ service_rootdir }}/venvs/{{ service_name }}"
 service_static_rootdir: "{{ service_rootdir }}/www"
 
-service_db_name: "{{ service_name }}"
-service_db_user: "{{ service_name }}"
-service_db_password: "{{ service_name }}"
+service_db_host: "{{ lookup('env', 'CATCHPY_DB_HOST') | default('postgres.vm', true) }}"
+service_db_name: "{{ lookup('env', 'CATCHPY_DB_NAME') | default(service_name , true) }}"
+service_db_user: "{{ lookup('env', 'CATCHPY_DB_USER') | default(service_name, true) }}"
+service_db_password: "{{ lookup('env', 'CATCHPY_DB_PASSWORD') | default(service_name, true) }}"
 
 db_rootdir: "{{ hx_rootdir }}/postgres"
 db_data_dir: "{{ db_rootdir }}/data/{{ postgres_version }}/main"
@@ -30,17 +31,18 @@ db_backup_dir: "{{ db_rootdir }}/backup"
 db_log_dir: "{{ db_data_dir }}/pg_log"
 db_other_log_dir: "{{ db_rootdir }}/log"
 db_bin_dir: "{{ db_rootdir }}/bin"
-db_backup_s3_path: "catchbu.harvardx.harvard.edu/{{ env }}"
+db_backup_s3_path: "catchbu.harvardx.harvard.edu/db"
 db_backup_local_retention_in_days: 7
 db_backup_s3_retention: "6 months"
 db_log_retention_in_days: 90
 
+webserver_dns: "{{ lookup('env', 'CATCHPY_WEBSERVER_DNS') | default('catchpy.vm', true) }}"
 service_dotenv_path: "{{ service_config_dir }}/{{ service_name }}.env"
 service_log_filename: "gunicorn_supervisor.log"
 service_log_path: "{{ service_log_dir }}/{{ service_log_filename }}"
 service_environment:
-  DJANGO_SETTINGS_MODULE: "{{ service_name }}.settings.{{ env }}"
-  CATCHPY_DJANGO_SECRET_KEY: "nao mais musa que a lira tenho destemperada"
+  DJANGO_SETTINGS_MODULE: "{{ service_name }}.settings.{{ lookup('env', 'CATCHPY_DJANGO_SETTINGS') | default('dev', true) }}"
+  CATCHPY_DJANGO_SECRET_KEY: "{{ lookup('env', 'CATCHPY_DJANGO_SECRET_KEY') | default('nao mais musa que a lira tenho destemperada', true) }}"
   CATCHPY_STATIC_ROOT: "{{ service_static_rootdir }}"
   CATCHPY_ALLOWED_HOSTS: "localhost 127.0.0.1 {{ webserver_dns }}"
   CATCHPY_COMPAT_MODE: "true"
@@ -49,17 +51,34 @@ service_environment:
   CATCHPY_DB_PASSWORD: "{{ service_db_password }}"
   CATCHPY_DB_HOST: "{{ service_db_host }}"
   CATCHPY_DB_PORT: "5432"
-service_admin_user: "user"
-service_admin_password: "password"
+service_admin_user: "{{ lookup('env', 'CATCHPY_ADMIN_USER') | default('user', true) }}"
+service_admin_password: "{{ lookup('env', 'CATCHPY_ADMIN_PASSWORD') | default('password', true) }}"
 
 nginx_access_log_path: "{{ service_log_dir }}/nginx_access.log"
 nginx_error_log_path: "{{ service_log_dir }}/nginx_error.log"
 nginx_ssl_dest_dir: "/etc/ssl/certs"
 nginx_static_dir: "{{ service_static_rootdir }}/"
 nginx_media_dir: "{{ nginx_static_dir }}"
+local_certs_dir: "{{ lookup('env', 'CATCHPY_LOCAL_CERTS_DIR') | default('./certs', true) }}"
+enable_ssl: "{{ lookup('env', 'CATCHPY_ENABLE_SSL') | default('false', true) }}"
 
 service_git_repo: "https://github.com/nmaekawa/catchpy.git"
 # this has to be a __version__ tag for successful verification in DEPLOYMENT:
 # you can use " master" when installing for the first time
-service_git_revision: "master"
+service_git_revision: "{{ lookup('env', 'CATCHPY_GIT_REVISION') | default('master', true) }}"
+
+use_aws: "{{ lookup('env', 'CATCHPY_USE_AWS') | default('false', true) }}"
+my_remote_user: "{{ (use_aws == 'true') | ternary('ubuntu', 'vagrant') }}"
+
+ebs_device: "/dev/xvdb"
+ebs_mountpoint: "{{ hx_rootdir }}"
+
+cloudwatch_user: "{{ lookup('env', 'CATCHPY_CLOUDWATCH_USER') | default('cloudwatch', true) }}"
+cloudwatch_group: "{{ cloudwatch_user }}"
+cloudwatch_prefix: "ec2_cloudwatch_put_read_list"
+
+# consumer-secret pair for jwt
+cloudwatch_api_key: "{{ lookup('env', 'CATCHPY_CLOUDWATCH_API_KEY') | default('cloudwatch_consumer', true) }}"
+cloudwatch_secret_key: "{{ lookup('env', 'CATCHPY_CLOUDWATCH_SECRET_KEY') | default('cloudwatch_secret', true) }}"
+
 

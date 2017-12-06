@@ -1,22 +1,41 @@
 ---
-    - name: nginx configuration file
-      template:
-        src: "service_config.j2"
-        dest: /etc/nginx/sites-available/{{ service_name }}
+    - name: replace server_name with webserver_dns in nginx config
+      replace:
+        path: /etc/nginx/sites-available/ssl_{{ service_name }}
+        regexp: '^(\s+)server_name\s+.*$'
+        replace: '\1server_name    {{ webserver_dns }};'
         backup: yes
-      notify: restart nginx
-      tags:
-        - nginx_config
+      when: enable_ssl == 'true'
 
-    - name: ensure default site is disabled
+
+    - name: replace server_name with webserver_dns in nonssl nginx config
+      replace:
+        path: /etc/nginx/sites-available/nonssl_{{ service_name }}
+        regexp: '^(\s+)server_name\s+.*$'
+        replace: '\1server_name {{ webserver_dns }}'
+        backup: yes
+
+    - name: link ssl cert to correct file
       file:
-        path: /etc/nginx/sites-enabled/default
-        state: absent
+        src: "{{ nginx_ssl_dest_dir }}/{{ webserver_dns | replace('.', '_') }}_bundle.crt"
+        dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.crt"
+        state: link
+      when: enable_ssl == 'true'
       notify: restart nginx
+
+
+    - name: link ssl key to correct file
+      file:
+        src: "{{ nginx_ssl_dest_dir }}/{{ webserver_dns | replace('.', '_') }}.key"
+        dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.key"
+        state: link
+      when: enable_ssl == 'true'
+      notify: restart nginx
+
 
     - name: ensure service site is enabled
       file:
-        src: /etc/nginx/sites-available/{{ service_name }}
+        src: /etc/nginx/sites-available/{{ (enable_ssl == 'true') | ternary('ssl', 'nonssl') }}_{{ service_name }}
         dest: /etc/nginx/sites-enabled/{{ service_name }}
         state: link
       notify: restart nginx

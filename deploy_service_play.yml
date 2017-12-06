@@ -3,7 +3,7 @@
 
 
 - hosts: catchpy
-  remote_user: "{{ remote_user }}"
+  remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
   vars_files:
@@ -17,7 +17,7 @@
     - { role: webapp_config, when: update_configs is defined and update_configs == True}
 
 - hosts: catchpy
-  remote_user: "{{ remote_user }}"
+  remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
   vars_files:

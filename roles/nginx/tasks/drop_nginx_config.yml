@@ -1,0 +1,13 @@
+---
+    - debug:
+        msg: "with_ssl is ({{ with_ssl }})"
+
+    - debug:
+        msg: "FILE SHOULD BE /etc/nginx/sites-available/{{ (with_ssl == 'true') | ternary('ssl', 'nonssl') }}_{{ service_name }}"
+
+    - name: nginx configuration file
+      template:
+        src: "service_config.j2"
+        dest: "/etc/nginx/sites-available/{{ (with_ssl == 'true') | ternary('ssl', 'nonssl') }}_{{ service_name }}"
+        backup: yes
+

@@ -1,7 +1,7 @@
 # initial playbook to provision a catchpy server
 ---
 - hosts: all
-  remote_user: "{{ remote_user }}"
+  remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
   gather_facts: False
@@ -12,12 +12,11 @@
 
 
 - hosts: all
-  remote_user: "{{ remote_user }}"
+  remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
   vars_files:
     - vars/catchpy_vars.yml
-    - vars/catchpy_aws_vars.yml
     - vars/users_public_keys.yml
 
   handlers:
@@ -31,4 +30,4 @@
 
   tasks:
     - import_tasks: roles/aws/tasks/setup_ebs_volumes.yml
-      when: aws is defined and aws == true
+      when: use_aws == 'true'
