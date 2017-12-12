@@ -21,6 +21,7 @@
         iam_type: role
         name: "cloudwatch_put_metric_role"
         trust_policy: "{{ lookup('file', '../files/cloudwatch_put_metric_policy.json') }}"
+        state: present
         #trust_policy:
         #  Version: '2012-10-17'
         #  Statement:

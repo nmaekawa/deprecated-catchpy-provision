@@ -7,7 +7,7 @@
 
     - name: pull version of updated service | fail for version before v1.1.0!
       become: no
-      local_action: command curl {{ (env == 'prod') | ternary('https', 'http') }}://{{ webserver_dns }}/version/
+      local_action: command curl {{ (enable_ssl == 'true') | ternary('https', 'http') }}://{{ webserver_dns }}/version/
       register: result
 
     - set_fact:

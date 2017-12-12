@@ -6,6 +6,6 @@
     - include_tasks: create_dirs.yml
     - include_tasks: copy_metric_scripts.yml
     - include_tasks: create_cloudwatch_consumer.yml
-      when: "'catchpy' in group_names"
+      when: "'tag_webserver' in group_names or 'tag_webserver_candidate' in group_names"
     - include_tasks: set_cronjobs.yml
 

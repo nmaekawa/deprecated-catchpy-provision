@@ -2,7 +2,7 @@
 
     - name: ensure hx global bin folder
       file:
-        path: "{{ hx_rootdir }}/bin"
+        path: "{{ org_rootdir }}/bin"
         owner: "root"
         group: "root"
         mode: 0755
@@ -10,7 +10,7 @@
 
     - name: ensure tmp global bin folder
       file:
-        path: "{{ hx_rootdir }}/tmp"
+        path: "{{ org_rootdir }}/tmp"
         owner: "root"
         group: "root"
         mode: 0755

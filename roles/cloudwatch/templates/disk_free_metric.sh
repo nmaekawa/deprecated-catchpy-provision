@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. {{ hx_rootdir }}/bin/custom_metrics_shared.sh
+. {{ org_rootdir }}/bin/custom_metrics_shared.sh
 
 filesystem_type="$1"
 metric_name=""

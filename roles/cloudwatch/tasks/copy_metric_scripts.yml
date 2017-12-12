@@ -3,7 +3,7 @@
     - name: copy shared scripts
       template:
         src: "{{ item }}"
-        dest: "{{ hx_rootdir }}/bin/{{ item | basename }}"
+        dest: "{{ org_rootdir }}/bin/{{ item | basename }}"
         owner: "root"
         group: "root"
         mode: "0775"
@@ -13,7 +13,7 @@
     - name: copy disk-free scripts
       template:
         src: "{{ item }}"
-        dest: "{{ hx_rootdir }}/bin/{{ item | basename }}"
+        dest: "{{ org_rootdir }}/bin/{{ item | basename }}"
         owner: "root"
         group: "root"
         mode: "0775"
@@ -23,22 +23,22 @@
     - name: copy response_time scripts
       template:
         src: "{{ item }}"
-        dest: "{{ hx_rootdir }}/bin/{{ item | basename }}"
+        dest: "{{ org_rootdir }}/bin/{{ item | basename }}"
         owner: "root"
         group: "root"
         mode: "0775"
       with_fileglob:
         - "../templates/*response_time*.sh"
-      when: "'catchpy' in group_names"
+      when: "'tag_webserver' in group_names"
 
     - name: copy make_jwt script
       template:
         src: "../templates/make_jwt.py"
-        dest: "{{ hx_rootdir }}/bin/make_jwt.py"
+        dest: "{{ org_rootdir }}/bin/make_jwt.py"
         owner: "root"
         group: "root"
         mode: "0775"
-      when: "'catchpy' in group_names"
+      when: "'tag_webserver' in group_names"
 
 
 

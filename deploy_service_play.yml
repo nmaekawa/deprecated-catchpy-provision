@@ -1,8 +1,43 @@
 # deploy new release of a catchpy server
 ---
 
+- hosts: tag_webserver_candidate
+  remote_user: "{{ my_remote_user }}"
+  become: yes
+  become_user: root
+  gather_facts: False
+  vars_files:
+    - vars/catchpy_vars.yml
 
-- hosts: catchpy
+  tasks:
+  - name: install python2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+
+- hosts: tag_webserver_candidate
+  remote_user: "{{ my_remote_user }}"
+  become: yes
+  become_user: root
+  vars_files:
+    - vars/catchpy_vars.yml
+    - vars/users_public_keys.yml
+
+  handlers:
+    - include: handlers/handlers.yml
+
+  roles:
+    - apt
+    - timedate
+    - python_setup
+    - user_account
+    - facts_setup
+
+  tasks:
+    - import_tasks: roles/aws/tasks/setup_ebs_volumes.yml
+      when: use_aws
+
+
+- hosts: tag_webserver_candidate
   remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
@@ -13,21 +48,9 @@
     - include: handlers/handlers.yml
 
   roles:
-    - webapp_deploy
-    - { role: webapp_config, when: update_configs is defined and update_configs == True}
-
-- hosts: catchpy
-  remote_user: "{{ my_remote_user }}"
-  become: yes
-  become_user: root
-  vars_files:
-    - vars/catchpy_vars.yml
-
-  handlers:
-    - include: handlers/handlers.yml
-
-  roles:
-    # have to set this as a separate list of roles because of handlers
-    # that need to run after a deploy/config block
-    - webapp_check_deploy
+    - python_venv
+    - webapp_install
+    - webapp_config
+    - webapp_admin
+    - nginx
 

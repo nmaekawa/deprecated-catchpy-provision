@@ -6,7 +6,7 @@
     - include_tasks: gunicorn.yml
 
     - include_tasks: socket_tuning.yml
-      when: use_aws == 'true'
+      when: use_aws
 
     - name: install postgres client
       apt:

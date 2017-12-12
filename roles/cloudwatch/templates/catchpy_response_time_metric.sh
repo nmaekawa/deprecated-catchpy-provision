@@ -1,20 +1,20 @@
 #!/bin/bash
 
-. {{ hx_rootdir }}/bin/custom_metrics_shared.sh
+. {{ org_rootdir }}/bin/custom_metrics_shared.sh
 
 metric_name="WebserviceResponseTime"
 
-catch_jwt=$({{ service_venv_dir }}/bin/python {{ hx_rootdir }}/bin/make_jwt.py {{ cloudwatch_api_key }} {{ cloudwatch_secret_key }} {{ cloudwatch_user }})
+catch_jwt=$({{ service_venv_dir }}/bin/python {{ org_rootdir }}/bin/make_jwt.py {{ cloudwatch_api_key }} {{ cloudwatch_secret_key }} {{ cloudwatch_user }})
 
 response_time=$(curl -w "%{time_total}" \
     --silent \
     -H "Authorization: token ${catch_jwt}" \
-    {{ (env == "prod") | ternary("https", "http") }}://{{ webserver_dns }}/is_alive \
-    -o {{ hx_rootdir }}/tmp/is_alive_response.json)
+    {{ (enable_ssl == "true") | ternary("https", "http") }}://{{ webserver_dns }}/is_alive \
+    -o {{ org_rootdir }}/tmp/is_alive_response.json)
 
 # check that payload is ok from is_alive response; needs to install jq
 # or assume that responding means ok
-is_alive=$(cat {{ hx_rootdir }}/tmp/is_alive_response.json | jq '.payload[0] == "ok"')
+is_alive=$(cat {{ org_rootdir }}/tmp/is_alive_response.json | jq '.payload[0] == "ok"')
 # then put-metric-data ${response_time} to cloudwatch
 if [ ${is_alive} == 'true' ]; then
   /usr/bin/aws cloudwatch put-metric-data \

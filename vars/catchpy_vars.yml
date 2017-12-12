@@ -1,13 +1,14 @@
 ---
 
-env: dev
 python_version: 3
 postgres_version: 9.6
 
-hx_rootdir: "/opt/hx"
+organization: "hx"
+org_dns_domain: "harvardx.harvard.edu"
+org_rootdir: "/opt/{{ organization }}"
 
 service_name: catchpy
-service_rootdir: "{{ hx_rootdir }}/{{ service_name }}"
+service_rootdir: "{{ org_rootdir }}/{{ service_name }}"
 service_user: "{{ service_name }}"
 # share permissions with webserver
 service_group: "www-data"
@@ -20,12 +21,11 @@ service_bin_dir: "{{ service_rootdir }}/bin"
 service_venv_dir: "{{ service_rootdir }}/venvs/{{ service_name }}"
 service_static_rootdir: "{{ service_rootdir }}/www"
 
-service_db_host: "{{ lookup('env', 'CATCHPY_DB_HOST') | default('postgres.vm', true) }}"
 service_db_name: "{{ lookup('env', 'CATCHPY_DB_NAME') | default(service_name , true) }}"
 service_db_user: "{{ lookup('env', 'CATCHPY_DB_USER') | default(service_name, true) }}"
 service_db_password: "{{ lookup('env', 'CATCHPY_DB_PASSWORD') | default(service_name, true) }}"
 
-db_rootdir: "{{ hx_rootdir }}/postgres"
+db_rootdir: "{{ org_rootdir }}/postgres"
 db_data_dir: "{{ db_rootdir }}/data/{{ postgres_version }}/main"
 db_backup_dir: "{{ db_rootdir }}/backup"
 db_log_dir: "{{ db_data_dir }}/pg_log"
@@ -36,7 +36,6 @@ db_backup_local_retention_in_days: 7
 db_backup_s3_retention: "6 months"
 db_log_retention_in_days: 90
 
-webserver_dns: "{{ lookup('env', 'CATCHPY_WEBSERVER_DNS') | default('catchpy.vm', true) }}"
 service_dotenv_path: "{{ service_config_dir }}/{{ service_name }}.env"
 service_log_filename: "gunicorn_supervisor.log"
 service_log_path: "{{ service_log_dir }}/{{ service_log_filename }}"
@@ -67,11 +66,11 @@ service_git_repo: "https://github.com/nmaekawa/catchpy.git"
 # you can use " master" when installing for the first time
 service_git_revision: "{{ lookup('env', 'CATCHPY_GIT_REVISION') | default('master', true) }}"
 
-use_aws: "{{ lookup('env', 'CATCHPY_USE_AWS') | default('false', true) }}"
-my_remote_user: "{{ (use_aws == 'true') | ternary('ubuntu', 'vagrant') }}"
+use_aws: "{{ (ec2_tag_cluster == 'vagrant') | ternary(False, True) }}"
+my_remote_user: "{{ use_aws | ternary('ubuntu', 'vagrant') }}"
 
 ebs_device: "/dev/xvdb"
-ebs_mountpoint: "{{ hx_rootdir }}"
+ebs_mountpoint: "{{ org_rootdir }}"
 
 cloudwatch_user: "{{ lookup('env', 'CATCHPY_CLOUDWATCH_USER') | default('cloudwatch', true) }}"
 cloudwatch_group: "{{ cloudwatch_user }}"
