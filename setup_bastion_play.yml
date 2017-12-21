@@ -1,17 +1,19 @@
 # initial playbook to provision a catchpy server
 ---
-- hosts: all
+- hosts: tag_bastion
   remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
   gather_facts: False
+  vars_files:
+    - vars/catchpy_vars.yml
 
   tasks:
   - name: install python2
     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
 
 
-- hosts: all
+- hosts: tag_bastion
   remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
@@ -24,10 +26,6 @@
 
   roles:
     - apt
-    - timedate
     - python_setup
     - user_account
 
-  tasks:
-    - import_tasks: roles/aws/tasks/setup_ebs_volumes.yml
-      when: use_aws
