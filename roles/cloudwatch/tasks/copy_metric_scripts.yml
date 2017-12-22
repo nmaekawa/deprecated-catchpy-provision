@@ -29,7 +29,7 @@
         mode: "0775"
       with_fileglob:
         - "../templates/*response_time*.sh"
-      when: "'tag_webserver' in group_names"
+      when: "'tag_webserver' in group_names or 'tag_webserver_candidate' in group_names"
 
     - name: copy make_jwt script
       template:
@@ -38,7 +38,7 @@
         owner: "root"
         group: "root"
         mode: "0775"
-      when: "'tag_webserver' in group_names"
+      when: "'tag_webserver' in group_names or 'tag_webserver_candidate' in group_names"
 
 
 

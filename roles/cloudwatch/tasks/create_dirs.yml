@@ -16,3 +16,10 @@
         mode: 0755
         state: directory
 
+    - name: ensure tmp cloudwatch folder
+      file:
+        path: "{{ org_rootdir }}/tmp/cloudwatch"
+        owner: "cloudwatch"
+        group: "cloudwatch"
+        mode: 0755
+        state: directory

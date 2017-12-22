@@ -15,7 +15,12 @@
     - name: set db private dns name as service_db_host
       set_fact:
           service_db_host: "{{ hostvars[ groups['tag_dbserver'][0] ]['ec2_private_dns_name'] }}"
-      when: not is_allinone
+      when: not is_allinone and shared_db_dns is not defined
+
+    - name: set SHARED db private dns name as service_db_host
+      set_fact:
+          service_db_host: "{{ shared_db_dns }}"
+      when: not is_allinone and shared_db_dns is defined
 
     - name: set localhost as service_db_host
       set_fact:
