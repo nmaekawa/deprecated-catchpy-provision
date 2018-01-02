@@ -58,7 +58,7 @@ nginx_error_log_path: "{{ service_log_dir }}/nginx_error.log"
 nginx_ssl_dest_dir: "/etc/ssl/certs"
 nginx_static_dir: "{{ service_static_rootdir }}/"
 nginx_media_dir: "{{ nginx_static_dir }}"
-local_certs_dir: "{{ lookup('env', 'CATCHPY_LOCAL_CERTS_DIR') | default('./certs', true) }}"
+local_certs_dir: "{{ lookup('env', 'CATCHPY_LOCAL_CERTS_DIR') | default('./vars', true) }}"
 enable_ssl: "{{ lookup('env', 'CATCHPY_ENABLE_SSL') | default('false', true) }}"
 
 service_git_repo: "https://github.com/nmaekawa/catchpy.git"

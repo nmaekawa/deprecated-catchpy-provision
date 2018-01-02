@@ -1,5 +1,10 @@
-= # catchpy-provision =
+# catchpy-provision
 ansible provisioning for catchpy backend service
+
+# disclaimer
+for demo purposes only! provided to show how to setup a catchpy vagrant
+installation and support to this repo is OUT-OF-SCOPE at this time.
+
 
 # for local vagrant catchpy
 
@@ -26,30 +31,28 @@ the vagrantfile in catchpy repo will start 2 ubuntu xenial instances:
 this will only start the boxes, so they don't have anything installed yet.
 you can change the tld and assigned local ips in the `Vagrantfile`.
 
-from the catchpy repo, you can login into each box like below:
+from the catchpy repo, login into each box like below, so the ssh host key
+fingerprint is stored in `~/.ssh/known_hosts`. This helps with ansible-playbook
+when installing catchpy:
 
-    $> vagrant ssh catchpy
-    # or
     $> ssh vagrant@catchpy.vm -i ~/.vagrant.d/insecure_private_key
     ...
-    $> vagrant ssh postgres
-    # or
     $> ssh vagrant@postgres.vm -i ~/.vagrant.d/insecure_private_key
-
+    ...
 
 
 ## provision the instances
 
-the ansible catchpy_first_install.yml will provision both instances; to run:
+the ansible catchpy_install_play.yml will provision both instances; to run:
 
     $> cd ../catchpy-provision
     
     # set vagrant insecure key in your env
     $> ssh-add ~/.vagrant.d/insecure_private_key
-    $> ansible-playbook -i hosts/vagrant.ini catchpy_first_install.yml
+    $> ansible-playbook -i hosts/vagrant.ini catchpy_install_play.yml
     
     # or specify it in the command line
-    $> ansible-playbook -i hosts/vagrant.ini --private-key ~/.vagrant.d/insecure_private_key catchpy_first_install.ym
+    $> ansible-playbook -i hosts/vagrant.ini --private-key ~/.vagrant.d/insecure_private_key catchpy_install_play.ym
 
 
 the default configuration:
@@ -62,7 +65,7 @@ the default configuration:
 - gunicorn is configured to talk to nginx via a socket at
   `/opt/hx/catchpy/venvs/run/gunicorn.sock`
 - django admin user is 'user:password'
-- nginx for dev env uses HTTP (HTTPS will require certs that can be verified)
+- nginx for dev env uses HTTP
 
 if all goes well, you should be able to check it out at
 https://catchpy.vm/static/anno/index.html
@@ -71,54 +74,41 @@ and get the swagger ui for the annotation api.
 
 ## to play with this catchpy install
 
-you can use the default api key-pair created for the django admin user; check
-the table `consumer` in the django admin ui (or use `psql`, catchpy:catchpy).
+you will need an api consumer key-pair; the install playbook creates that and
+you can check table `consumer` on the django admin ui at `http://catchpy.vm/admin`.
 
-the easiest way to generate an encoded token is to grab the key-pair from the
-django admin user and paste it to http://jwt.io debugger.
+NOTE that the django admin ui is for queries only; it is NOT RECOMMENDED to
+create/update records via django admin ui.
 
-first, paste the secret-key in the "verify signature" tab of jwt.io (the bottom
-one, in blue).
+to generate an api token, check the django command `make_token`:
 
-then the payload must be something like:
-
-    {
-      "consumerKey": "the-consumer-key-from-django-admin-user",
-      "userId": "some-dummy-user-id",
-      "issuedAt": "YYYY-MM-DDTHH:mm:SS+00:00",
-      "ttl": 6000
-    }
-
-the encoded token will show up in the left part of the screen.
+    $> cd catchpy
+    
+    # activate virtualenv, if using one
+    $> source venv/bin/activate
+    
+    # it has a help!
+    $> ./manage.py make_token --help
+    ...
+    # and will go somewhat like this, for a ttl of 10 min and user "mary_poppins"
+    $> ./manage.py make_token --api_key "api_key" --secret_key "secret_key" --ttl 600 --user "mary_poppins"
 
 
 # changing default configs
 
+as disclaimed, there is no support for provision and configuration. Proceed at
+your own peril.
+
 variables for the ansible provisioning are centralized at
 
-    ansible-provision/vars/catchpy_vars.yml
+    catchpy-provision/vars/catchpy_vars.yml
 
-currently, the provisioning works for vagrant instances only.
 
-variables you might want to change:
+BUT, if you wish to just change django config stuff, defined it in the
+environment. Check:
 
-1. service_db_*
-   
-   to mess up with database webapp user
-   
-2. service_environment.CATCHPY_DJANGO_SECRET_KEY
-   
-   this is the SECRET_KEY for django sessions, crypt signing, etc
-   
-3. service_admin_user/service_admin_password
-   
-   this is the django admin ui superuser. The provisioning will create this
-   user automatically (and as side effect, a consumer key-pair will be
-   generated as well). Change to values that make sense to you.
-   
-4. service_git_revision
-   
-   git branch, tag, or sha to be cloned in the catchpy instance.
+    catchpy-provision/catchpy_sample.env
+
 
 # logs, restarting services
 
