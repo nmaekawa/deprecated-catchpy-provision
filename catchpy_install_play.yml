@@ -26,7 +26,6 @@
 
   roles:
     - apt
-    - timedate
     - python_setup
     - user_account
     - facts_setup
