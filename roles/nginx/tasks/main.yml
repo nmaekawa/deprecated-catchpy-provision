@@ -1,22 +1,3 @@
 ---
-    # parameters:
-    #
-    # common:
-    #   service_name
-    #   enable_ssl: True|False  - config nginx to use ssl certs
-    #   nginx_ssl_dest_dir
-    #
-    # provision:
-    #   local_certs_dir: local dir to copy ssl certs from
-    #   service_venv_dir
-    #   nginx_access_log_path
-    #   nginx_error_log_path
-    #   nginx_static_dir
-    #   nginx_media_dir
-    #
-    # config:
-    #   webserver_dns
-    #
-    - include_tasks: provision_web_service.yml
-    - include_tasks: config_web_service.yml
 
+    - include_tasks: config_nginx_for_service.yml

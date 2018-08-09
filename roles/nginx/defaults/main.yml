@@ -1,0 +1,7 @@
+---
+
+static_dir: '/var/www/html'
+
+include_static_manifest: 'false'
+
+

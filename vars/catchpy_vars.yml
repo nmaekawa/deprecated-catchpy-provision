@@ -1,29 +1,36 @@
 ---
 
-python_version: 3
-postgres_version: 9.6
+# CATCHPY VARS
+# ----------------------------------------------------------------------------------
 
-organization: "hx"
-org_dns_domain: "harvardx.harvard.edu"
-org_rootdir: "/opt/{{ organization }}"
-
-service_name: catchpy
-service_rootdir: "{{ org_rootdir }}/{{ service_name }}"
+# service vars
+service_name: "catchpy"
 service_user: "{{ service_name }}"
 # share permissions with webserver
-service_group: "www-data"
+service_group: "{{ service_name }}"
+
+organization: "hx"
+org_rootdir: "/opt/{{ organization }}"
+service_rootdir: "{{ org_rootdir }}/{{ service_name }}"
+service_venv_dir: "{{ service_rootdir }}/venv"
+service_log_dir: "{{ service_rootdir }}/log"
+service_log_path: "{{ service_log_dir }}/{{ service_name }}.log"
+# uncomment, otherwise default is debug: # 'DEBUG'|'INFO'|'WARNING'|'ERROR'|'CRITICAL'
+# service_log_level: "DEBUG"
 
 service_install_dir: "{{ service_rootdir }}/{{ service_name }}"
+service_static_dir: "{{ service_rootdir }}/www"
+service_django_static_dir: "{{ service_static_dir }}/static"
 service_config_dir: "{{ service_rootdir }}/conf"
-service_log_dir: "{{ service_rootdir }}/logs"
-service_log_retention_in_days: 370
 service_bin_dir: "{{ service_rootdir }}/bin"
-service_venv_dir: "{{ service_rootdir }}/venvs/{{ service_name }}"
-service_static_rootdir: "{{ service_rootdir }}/www"
+service_data_dir: "{{ service_rootdir }}/data"
 
+# specific to catchpy
 service_db_name: "{{ lookup('env', 'CATCHPY_DB_NAME') | default(service_name , true) }}"
 service_db_user: "{{ lookup('env', 'CATCHPY_DB_USER') | default(service_name, true) }}"
 service_db_password: "{{ lookup('env', 'CATCHPY_DB_PASSWORD') | default(service_name, true) }}"
+service_db_host: "{{ lookup('env', 'CATCHPY_DB_HOST') | default('localhost', true) }}"
+service_db_port: "{{ lookup('env', 'CATCHPY_DB_PORT') | default('5432', true) }}"
 
 db_rootdir: "{{ org_rootdir }}/postgres"
 db_data_dir: "{{ db_rootdir }}/data/{{ postgres_version }}/main"
@@ -36,42 +43,73 @@ db_backup_local_retention_in_days: 7
 db_backup_s3_retention: "6 months"
 db_log_retention_in_days: 90
 
+service_gunicorn_port: "{{ lookup('env', 'CATCHPY_GUNICORN_PORT') | default('8236', true) }}"
+service_gunicorn_host: "{{ lookup('env', 'CATCHPY_GUNICORN_HOST') | default('127.0.0.1', true) }}"
+gunicorn_timeout_seconds: 60  # workers timeout for nginx cfg
+
+service_git_repo: "https://github.com/nmaekawa/{{ service_name }}.git"
+var_service_git_revision: "{{ service_name | upper }}_GIT_REVISION"
+service_git_revision: "{{ lookup('env', var_service_git_revision) | default('master', true) }}"
+
+# easier to create dirs with this dict
+service_dirs_to_create:
+    - "{{ service_rootdir }}"
+    - "{{ service_log_dir }}"
+    - "{{ service_config_dir }}"
+    - "{{ service_data_dir }}"
+    - "{{ service_bin_dir }}"
+    - "{{ service_static_dir }}"
+    - "{{ service_django_static_dir }}"
+
+# specific to webapp_install role
 service_dotenv_path: "{{ service_config_dir }}/{{ service_name }}.env"
-service_log_filename: "gunicorn_supervisor.log"
-service_log_path: "{{ service_log_dir }}/{{ service_log_filename }}"
+# django admin user to be created
+service_admin_user: "{{ lookup('env', 'CATCHPY_ADMIN_USER') | default('user', true) }}"
+service_admin_email: "{{ lookup('env', 'CATCHPY_ADMIN_EMAIL') | default('user@user.com', true) }}"
+service_admin_password: "{{ lookup('env', 'CATCHPY_ADMIN_PASSWORD') | default('password', true) }}"
+service_default_django_settings: '{{ service_name }}.settings.dev'
+# env vars defined in service_dotenv_path file
 service_environment:
-  DJANGO_SETTINGS_MODULE: "{{ service_name }}.settings.{{ lookup('env', 'CATCHPY_DJANGO_SETTINGS') | default('dev', true) }}"
-  CATCHPY_DJANGO_SECRET_KEY: "{{ lookup('env', 'CATCHPY_DJANGO_SECRET_KEY') | default('nao mais musa que a lira tenho destemperada', true) }}"
-  CATCHPY_STATIC_ROOT: "{{ service_static_rootdir }}"
+  DJANGO_SETTINGS_MODULE: "{{ lookup('env', 'CATCHPY_DJANGO_SETTINGS') | default(service_default_django_settings, true) }}"
+  DJANGO_SECRET_KEY: "{{ lookup('env', 'CATCHPY_DJANGO_SECRET_KEY') | default('nao pode mais meu coracao viver assim', true) }}"
+  CATCHPY_STATIC_ROOT: "{{ service_django_static_dir }}"
   CATCHPY_ALLOWED_HOSTS: "localhost 127.0.0.1 {{ webserver_dns }}"
   CATCHPY_COMPAT_MODE: "true"
   CATCHPY_DB_NAME: "{{ service_db_name }}"
   CATCHPY_DB_USER: "{{ service_db_user }}"
   CATCHPY_DB_PASSWORD: "{{ service_db_password }}"
   CATCHPY_DB_HOST: "{{ service_db_host }}"
-  CATCHPY_DB_PORT: "5432"
-service_admin_user: "{{ lookup('env', 'CATCHPY_ADMIN_USER') | default('user', true) }}"
-service_admin_password: "{{ lookup('env', 'CATCHPY_ADMIN_PASSWORD') | default('password', true) }}"
+  CATCHPY_DB_PORT: "{{ service_db_port }}"
 
-nginx_access_log_path: "{{ service_log_dir }}/nginx_access.log"
-nginx_error_log_path: "{{ service_log_dir }}/nginx_error.log"
-nginx_ssl_dest_dir: "/etc/ssl/certs"
-nginx_static_dir: "{{ service_static_rootdir }}/"
-nginx_media_dir: "{{ nginx_static_dir }}"
-local_certs_dir: "{{ lookup('env', 'CATCHPY_LOCAL_CERTS_DIR') | default('./vars', true) }}"
-enable_ssl: "{{ lookup('env', 'CATCHPY_ENABLE_SSL') | default('false', true) }}"
 
-service_git_repo: "https://github.com/nmaekawa/catchpy.git"
-# this has to be a __version__ tag for successful verification in DEPLOYMENT:
-# you can use " master" when installing for the first time
-service_git_revision: "{{ lookup('env', 'CATCHPY_GIT_REVISION') | default('master', true) }}"
+# for Stouts.users
+users_enabled: yes
+users_to_install:
+    - 'nmaekawa'
+    - 'lduarte'
+    - '{{ service_user }}'
 
-use_aws: "{{ (ec2_tag_cluster == 'vagrant') | ternary(False, True) }}"
-my_remote_user: "{{ use_aws | ternary('ubuntu', 'vagrant') }}"
 
-ebs_device: "/dev/xvdb"
-ebs_mountpoint: "{{ org_rootdir }}"
+# for nmaekawa.apt
+apt_required_packages_catchpy:
+    - 'python-pip'
+    - 'python-dev'
+    - 'python-setuptools'
+    - 'nginx'
+    - 'supervisor'
+    - 'sqlite3'
 
+
+# PROXY VARS
+# ----------------------------------------------------------------------------------
+enable_ssl: '{{ use_aws }}'
+static_dir: '{{service_static_dir }}'
+nginx_ssl_dest_dir: '/etc/ssl/certs'
+cert_dns: 'catchpy'  # this name must match pattern for ssl cert names
+
+
+# CLOUDWATCH VARS
+# ----------------------------------------------------------------------------------
 cloudwatch_user: "{{ lookup('env', 'CATCHPY_CLOUDWATCH_USER') | default('cloudwatch', true) }}"
 cloudwatch_group: "{{ cloudwatch_user }}"
 cloudwatch_prefix: "ec2_cloudwatch_put_read_list"
@@ -79,5 +117,4 @@ cloudwatch_prefix: "ec2_cloudwatch_put_read_list"
 # consumer-secret pair for jwt
 cloudwatch_api_key: "{{ lookup('env', 'CATCHPY_CLOUDWATCH_API_KEY') | default('cloudwatch_consumer', true) }}"
 cloudwatch_secret_key: "{{ lookup('env', 'CATCHPY_CLOUDWATCH_SECRET_KEY') | default('cloudwatch_secret', true) }}"
-
 

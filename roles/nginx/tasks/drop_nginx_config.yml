@@ -3,11 +3,21 @@
         msg: "with_ssl is ({{ with_ssl }})"
 
     - debug:
-        msg: "FILE SHOULD BE /etc/nginx/sites-available/{{ (with_ssl == 'true') | ternary('ssl', 'nonssl') }}_{{ service_name }}"
+        msg: "FILE SHOULD BE /etc/nginx/sites-available/{{ (with_ssl == True) | ternary('ssl', 'nonssl') }}_{{ service_name }}"
 
-    - name: nginx configuration file
+    - name: drop nginx site config for {{ service_name }} as {{ with_ssl }}
       template:
-        src: "service_config.j2"
-        dest: "/etc/nginx/sites-available/{{ (with_ssl == 'true') | ternary('ssl', 'nonssl') }}_{{ service_name }}"
+        src: "{{ nginx_template_path }}"
+        dest: "/etc/nginx/sites-available/{{ (with_ssl == True) | ternary('ssl', 'nonssl') }}_{{ service_name }}"
         backup: yes
+
+    - name: drop catchpy snippet if configuring catchpy instance
+      template:
+          src: nginx_catchpy.j2
+          dest: "/etc/nginx/snippets/catchpy.conf"
+          backup: yes
+      when: ec2_tag_catchpy is defined
+
+
+
 
