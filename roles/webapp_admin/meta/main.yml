@@ -1,4 +1,0 @@
----
-
-dependencies:
-    - { role: webapp_config }
