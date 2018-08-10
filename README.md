@@ -18,17 +18,15 @@ you'll need:
 
 ## start vagrant instances
 
-the vagrantfile in catchpy repo will start 2 ubuntu xenial instances:
+the Vagrantfile will start a ubuntu xenial:
 
-    - postgres.vm
     - catchpy.vm
 
     $> git clone https://github.com/nmaekawa/catchpy-provision.git
-    $> git clone https://github.com/nmaekawa/catchpy.git
-    $> cd catchpy
+    $> cd catchpy-provision
     $> vagrant up
 
-this will only start the boxes, so they don't have anything installed yet.
+this will only start the box, and it doesn't have anything installed yet.
 you can change the tld and assigned local ips in the `Vagrantfile`.
 
 from the catchpy repo, login into each box like below, so the ssh host key
@@ -37,15 +35,13 @@ when installing catchpy:
 
     $> ssh vagrant@catchpy.vm -i ~/.vagrant.d/insecure_private_key
     ...
-    $> ssh vagrant@postgres.vm -i ~/.vagrant.d/insecure_private_key
-    ...
 
 
-## provision the instances
+## provision the instance
 
 the ansible catchpy_install_play.yml will provision both instances; to run:
 
-    $> cd ../catchpy-provision
+    $> cd catchpy-provision
     
     # set vagrant insecure key in your env
     $> ssh-add ~/.vagrant.d/insecure_private_key
@@ -62,8 +58,6 @@ the default configuration:
   logs, catchpy repo clone, config/dotenv files
 - catchpy django app will run with gunicorn; check
   `/opt/hx/catchpy/venvs/catchpy/bin/gunicorn_start`
-- gunicorn is configured to talk to nginx via a socket at
-  `/opt/hx/catchpy/venvs/run/gunicorn.sock`
 - django admin user is 'user:password'
 - nginx for dev env uses HTTP
 
@@ -82,16 +76,18 @@ create/update records via django admin ui.
 
 to generate an api token, check the django command `make_token`:
 
-    $> cd catchpy
+    # login into the vagrant catchpy.vm
+    $> vagrant ssh
+    catchpy.vm $> cd /opt/hx/catchpy/catchpy
     
     # activate virtualenv, if using one
-    $> source venv/bin/activate
+    catchpy.vm $> source /opt/hx/catchpy/venv/bin/activate
     
     # it has a help!
-    $> ./manage.py make_token --help
+    catchpy.vm $> ./manage.py make_token --help
     ...
     # and will go somewhat like this, for a ttl of 10 min and user "mary_poppins"
-    $> ./manage.py make_token --api_key "api_key" --secret_key "secret_key" --ttl 600 --user "mary_poppins"
+    catchpy.vm $> ./manage.py make_token --api_key "api_key" --secret_key "secret_key" --ttl 600 --user "mary_poppins"
 
 
 # changing default configs
@@ -112,7 +108,7 @@ environment. Check:
 
 # logs, restarting services
 
-django app logs can be found at `/opt/hx/catchpy/logs/gunicorn_supervisor.log`
+django app logs can be found at `/opt/hx/catchpy/log/catchpy.log`
 
 the django app is setup to use gunicorn and supervisor so if you need to restart
 the webapp do:

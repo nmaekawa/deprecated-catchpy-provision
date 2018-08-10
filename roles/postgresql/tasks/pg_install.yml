@@ -19,7 +19,7 @@
     - name: postgres | install postgres
       apt:
         name: "{{ item }}"
-        state: installed
+        state: present
       with_items:
         - postgresql-{{ postgres_version }}
         - postgresql-contrib-{{ postgres_version }}

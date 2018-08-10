@@ -8,20 +8,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.landrush.enabled = true
   config.landrush.tld = "vm"
 
-  # postgres node
-  config.vm.define "postgres" do |postgres|
-    postgres.vm.box = "bento/ubuntu-16.04"
-    postgres.vm.hostname = "postgres.vm"
-    postgres.vm.network "private_network", ip: "10.5.50.5"
-
-    postgres.ssh.forward_agent = true
-    postgres.ssh.insert_key = false
-
-    postgres.vm.provider "virtualbox" do |v|
-        v.memory = "4096"
-    end
-  end
-
   # django webapp
   config.vm.define "catchpy" do |catchpy|
     catchpy.vm.box = "bento/ubuntu-16.04"
