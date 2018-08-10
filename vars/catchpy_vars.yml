@@ -9,8 +9,8 @@ service_user: "{{ service_name }}"
 # share permissions with webserver
 service_group: "{{ service_name }}"
 
-organization: "hx"
-org_rootdir: "/opt/{{ organization }}"
+org_rootdir_ebs: "{{ ebs_mountpoint }}/hx"
+org_rootdir: "{{ org_rootdir_ebs if create_extra_ebs else '/opt/hx' }}"
 service_rootdir: "{{ org_rootdir }}/{{ service_name }}"
 service_venv_dir: "{{ service_rootdir }}/venv"
 service_log_dir: "{{ service_rootdir }}/log"
@@ -97,6 +97,12 @@ apt_required_packages_catchpy:
     - 'python-setuptools'
     - 'nginx'
     - 'supervisor'
+    - 'sqlite3'
+
+apt_required_packages_bastion:
+    - 'python-pip'
+    - 'python-dev'
+    - 'python-setuptools'
     - 'sqlite3'
 
 

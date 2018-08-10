@@ -24,3 +24,11 @@ users_ssh_keys: '{{ users_users }}'
 
 # certificates mount point
 local_certs_dir: '{{ lookup("env", "LOCAL_CERTS_DIR") | default("/Volumes/magic_numbers/certs", true) }}'
+
+
+# for extra ebs creation and config
+create_extra_ebs: true
+ebs_device: '/dev/xvdh'
+ebs_mountpoint: '/opt/data_ebs'
+ebs_volume_size: 8
+

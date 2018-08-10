@@ -1,0 +1,92 @@
+#
+# playbook to add extra-ebs to hxarc server
+# -----------------------------------------
+#
+# it creates a new ebs volume, attaches to the ec2 instance
+# server, formats it, and mounts it.
+#
+# aws credentials must be configured in the environment.
+#
+# these vars are defined in vars/common_vars.yml
+#
+#      ebs_device: "/dev/xvdh"
+#      ebs_mountpoint: "/opt/data_ebs"
+#      ebs_volume_size: 8
+#
+---
+- hosts: '{{ target_hosts | default("tag_webserver", true) }}'
+  remote_user: "{{ my_remote_user }}"
+  become: yes
+  become_user: root
+  gather_facts: False
+  vars_files:
+      - vars/common_vars.yml
+      - vars/catchpy_vars.yml
+
+  tasks:
+      - name: install python2
+        raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+        register: result
+        changed_when: "result.stdout != ''"
+
+
+- hosts: '{{ target_hosts | default("tag_webserver", true) }}'
+  remote_user: "{{ my_remote_user }}"
+  become: yes
+  vars:
+  vars_files:
+      - vars/common_vars.yml
+      - vars/catchpy_vars.yml
+  handlers:
+      - include_tasks: handlers/main.yml
+
+  tasks:
+      - name: create extra ebs volume
+        become_user: "{{ lookup('env', 'USER') }}"
+        delegate_to: localhost
+        ec2_vol:
+            instance: "{{ hostvars[item].ec2_id }}"
+            volume_size: "{{ ebs_volume_size }}"
+            volume_type: gp2
+            device_name: "{{ ebs_device }}"
+            state: present
+            tags:
+                cluster: "{{ ec2_tag_cluster }}"
+                project: "{{ ec2_tag_project }}"
+                Name: "{{ ec2_tag_Name }}-extra"
+        with_items: "{{ hostvars }}"
+        register: ec2_vol
+
+      - name: print ebs info
+        debug:
+           msg: "{{ item }}"
+        with_items: "{{ ec2_vol.results }}"
+
+      - name: attach volume
+        become_user: "{{ lookup('env', 'USER') }}"
+        delegate_to: localhost
+        ec2_vol:
+            id: "{{ item.volume_id }}"
+            instance: "{{ item.invocation.module_args.instance }}"
+            device_name: "{{ ebs_device }}"
+        with_items: "{{ ec2_vol.results }}"
+
+      - name: make filesystem out of ebs
+        filesystem:
+            fstype: ext4
+            dev: "{{ ebs_device }}"
+
+      - name: create mountpoint
+        file:
+            path: "{{ ebs_mountpoint }}"
+            state: directory
+
+      - name: mount ebs
+        mount:
+            path: "{{ ebs_mountpoint }}"
+            src: "{{ ebs_device }}"
+            fstype: ext4
+            state: mounted
+
+
+

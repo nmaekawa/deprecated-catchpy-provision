@@ -1,31 +1,48 @@
 # initial playbook to provision a catchpy server
 ---
-- hosts: tag_bastion
+- hosts: '{{ target_hosts | default("tag_bastion", true) }}'
   remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
   gather_facts: False
   vars_files:
-    - vars/catchpy_vars.yml
+      - vars/common_vars.yml
+      - vars/catchpy_vars.yml
 
   tasks:
   - name: install python2
     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    register: result
+    changed_when: "result.stdout != ''"
 
 
-- hosts: tag_bastion
+- hosts: '{{ target_hosts | default("tag_bastion", true) }}'
   remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
+  vars:
+      local_user:
+          name: '{{ service_name }}'
+          authorized: []
   vars_files:
+    - vars/common_vars.yml
     - vars/catchpy_vars.yml
-    - vars/users_public_keys.yml
 
-  handlers:
-    - include: handlers/handlers.yml
+  tasks:
+      - name: passwordless sudo
+        include_role:
+            name: external/jmcvetta.passwordless_sudo
 
-  roles:
-    - apt
-    - python_setup
-    - user_account
+      - name: install packages
+        include_role:
+            name: external/nmaekawa.apt
+        vars:
+            apt_other_packages: '{{ apt_required_packages_bastion }}'
+
+      - name: create devo, service users
+        include_role:
+            name: external/Stouts.users
+        vars:
+            users_users: '{{ users_developers + [local_user] }}'
+
 

@@ -9,10 +9,10 @@
       - vars/catchpy_vars.yml
 
   tasks:
-  - name: install python2
-    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-    register: result
-    changed_when: "result.stdout != ''"
+      - name: install python2
+        raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+        register: result
+        changed_when: "result.stdout != ''"
 
 
 - hosts: '{{ target_hosts | default("tag_webserver", true) }}'
@@ -43,13 +43,6 @@
             name: external/Stouts.users
         vars:
             users_users: '{{ users_developers + [local_user] }}'
-
-        #- name: set facts
-        #include_role:
-        #    name: facts_setup
-
-        #- import_tasks: roles/aws/tasks/setup_ebs_volumes.yml
-        #when: use_aws
 
 
 - hosts: '{{ target_hosts | default("tag_webserver", true) }}'
