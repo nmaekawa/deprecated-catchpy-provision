@@ -74,7 +74,6 @@ service_environment:
   DJANGO_SECRET_KEY: "{{ lookup('env', 'CATCHPY_DJANGO_SECRET_KEY') | default('nao pode mais meu coracao viver assim', true) }}"
   CATCHPY_STATIC_ROOT: "{{ service_django_static_dir }}"
   CATCHPY_ALLOWED_HOSTS: "localhost 127.0.0.1 {{ webserver_dns }}"
-  CATCHPY_COMPAT_MODE: "true"
   CATCHPY_DB_NAME: "{{ service_db_name }}"
   CATCHPY_DB_USER: "{{ service_db_user }}"
   CATCHPY_DB_PASSWORD: "{{ service_db_password }}"

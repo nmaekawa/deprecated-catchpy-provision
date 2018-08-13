@@ -2,7 +2,7 @@
 ansible provisioning for catchpy backend service
 
 # disclaimer
-for demo purposes only! provided to show how to setup a catchpy vagrant
+for demo purposes only! provided only to show how to setup a catchpy vagrant
 installation and support to this repo is OUT-OF-SCOPE at this time.
 
 
@@ -16,7 +16,7 @@ you'll need:
 - virtualbox
 - ansible 2.4.0
 
-## start vagrant instances
+## start vagrant instance
 
 the Vagrantfile will start a ubuntu xenial:
 
@@ -29,7 +29,7 @@ the Vagrantfile will start a ubuntu xenial:
 this will only start the box, and it doesn't have anything installed yet.
 you can change the tld and assigned local ips in the `Vagrantfile`.
 
-from the catchpy repo, login into each box like below, so the ssh host key
+login into box like below, so the ssh host key
 fingerprint is stored in `~/.ssh/known_hosts`. This helps with ansible-playbook
 when installing catchpy:
 
@@ -39,19 +39,43 @@ when installing catchpy:
 
 ## provision the instance
 
-the ansible catchpy_install_play.yml will provision both instances; to run:
+Run:
 
+    # you do want a virtualenv
     $> cd catchpy-provision
-    
+    $> virtualenv venv
+    $> source venv/bin/activate
+    (venv) $> pip install ansible
+
+    # install external ansible roles
+    (venv) $> cd roles
+    (venv) $> ansible-galaxy -r requirements.yml -p ./external
+
+    # back to catchpy-provision root dir
+    (venv) $> cd ..
+
     # set vagrant insecure key in your env
-    $> ssh-add ~/.vagrant.d/insecure_private_key
-    $> ansible-playbook -i hosts/vagrant.ini catchpy_install_play.yml
-    
-    # or specify it in the command line
-    $> ansible-playbook -i hosts/vagrant.ini --private-key ~/.vagrant.d/insecure_private_key catchpy_install_play.ym
+    (venv) $> ssh-add ~/.vagrant.d/insecure_private_key
+
+    # playbook catchpy_install_play.yml will set the db and catchpy django
+    (venv) $> ansible-playbook -i hosts/vagrant.ini catchpy_install_play.yml
+
+if all goes well, you should be able to see the django-admin ui:
+
+    http://catchpy.vm/admin
+
+and check the catchpy api:
+
+    http://catchpy.vm/static/anno/index.html
+
+to create auth tokens, please refer to the catchpy repo readme:
+
+    https://github.com/nmaekawa/catchpy
 
 
-the default configuration:
+## the default configuration
+
+running the provisioning like in the previous step, renders a default install:
 
 - postgres database `catchpy`, owned by user `catchpy` with password `catchpy`
 - root dir for catchpy is `/opt/hx/catchpy`; in there you'll find the virtualenv,
@@ -60,34 +84,6 @@ the default configuration:
   `/opt/hx/catchpy/venvs/catchpy/bin/gunicorn_start`
 - django admin user is 'user:password'
 - nginx for dev env uses HTTP
-
-if all goes well, you should be able to check it out at
-https://catchpy.vm/static/anno/index.html
-and get the swagger ui for the annotation api.
-
-
-## to play with this catchpy install
-
-you will need an api consumer key-pair; the install playbook creates that and
-you can check table `consumer` on the django admin ui at `http://catchpy.vm/admin`.
-
-NOTE that the django admin ui is for queries only; it is NOT RECOMMENDED to
-create/update records via django admin ui.
-
-to generate an api token, check the django command `make_token`:
-
-    # login into the vagrant catchpy.vm
-    $> vagrant ssh
-    catchpy.vm $> cd /opt/hx/catchpy/catchpy
-    
-    # activate virtualenv, if using one
-    catchpy.vm $> source /opt/hx/catchpy/venv/bin/activate
-    
-    # it has a help!
-    catchpy.vm $> ./manage.py make_token --help
-    ...
-    # and will go somewhat like this, for a ttl of 10 min and user "mary_poppins"
-    catchpy.vm $> ./manage.py make_token --api_key "api_key" --secret_key "secret_key" --ttl 600 --user "mary_poppins"
 
 
 # changing default configs
@@ -104,6 +100,11 @@ BUT, if you wish to just change django config stuff, defined it in the
 environment. Check:
 
     catchpy-provision/catchpy_sample.env
+
+and run the provision with these env vars:
+
+    $> (source catchpy_sample.env; ansible-playbook -i hosts/vagrant.ini catchpy_install_play.yml)
+
 
 
 # logs, restarting services
