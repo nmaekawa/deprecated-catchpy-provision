@@ -1,0 +1,58 @@
+# install scripts for monitoring ec2 instances
+#
+#
+# this playbook requirems awscli locally installed!
+# and implies aws = true
+#
+---
+
+# https://gist.github.com/gwillem/4ba393dceb55e5ae276a87300f6b8e6f
+# https://stackoverflow.com/questions/32429259/ansible-fails-with-bin-sh-1-usr-bin-python-not-found/41429731
+- hosts: '{{ target_hosts | default("tag_webserver_candidate", true) }}:&tag_project_{{ service_name }}'
+  remote_user: "{{ my_remote_user }}"
+  become: yes
+  become_user: root
+  gather_facts: False
+  vars_files:
+    - vars/common_vars.yml
+    - vars/catchpy_vars.yml
+
+  tasks:
+      - name: install python2
+        raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+        register: result
+        changed_when: "result.stdout != ''"
+
+
+- hosts: '{{ target_hosts | default("tag_webserver_candidate", true) }}:&tag_project_{{ service_name }}'
+  remote_user: "{{ my_remote_user }}"
+  become: yes
+  become_user: root
+  vars_files:
+      - vars/common_vars.yml
+      - vars/catchpy_vars.yml
+
+  handlers:
+      - include_tasks: handlers/handlers.yml
+
+  tasks:
+      - import_role:
+            name: external/Stouts.users
+        vars:
+            users_enabled: yes
+            users_users:
+                - name: cloudwatch
+                  authorized: []
+            users_to_install:
+                - cloudwatch
+
+      - name: setup webserver name
+        include_tasks: 'roles/facts_setup/tasks/webserver_dns.yml'
+
+      - import_role:
+            name: external/nmaekawa.cloudwatch
+        vars:
+            cloudwatch_user: cloudwatch
+
+
+

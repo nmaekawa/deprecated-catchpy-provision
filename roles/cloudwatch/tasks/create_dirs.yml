@@ -1,25 +1,15 @@
 ---
+    #
+    # nmaekawa.cloudwatch is a dependency role
+    #
+    # `cloudwatch_user_home` is setup in nmaekawa.cloudwatch/tasks/set_instance_facts.yml
+    #
 
-    - name: ensure hx global bin folder
+    - name: ensure tmp folder exists
       file:
-        path: "{{ org_rootdir }}/bin"
+        path: "{{ cloudwatch_user_home }}/tmp/cloudwatch"
         owner: "root"
         group: "root"
         mode: 0755
         state: directory
 
-    - name: ensure tmp global bin folder
-      file:
-        path: "{{ org_rootdir }}/tmp"
-        owner: "root"
-        group: "root"
-        mode: 0755
-        state: directory
-
-    - name: ensure tmp cloudwatch folder
-      file:
-        path: "{{ org_rootdir }}/tmp/cloudwatch"
-        owner: "cloudwatch"
-        group: "cloudwatch"
-        mode: 0755
-        state: directory

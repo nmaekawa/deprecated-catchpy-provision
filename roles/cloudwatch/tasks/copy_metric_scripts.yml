@@ -1,29 +1,15 @@
 ---
-
-    - name: copy shared scripts
-      template:
-        src: "{{ item }}"
-        dest: "{{ org_rootdir }}/bin/{{ item | basename }}"
-        owner: "root"
-        group: "root"
-        mode: "0775"
-      with_fileglob:
-        - "../templates/*_shared.sh"
-
-    - name: copy disk-free scripts
-      template:
-        src: "{{ item }}"
-        dest: "{{ org_rootdir }}/bin/{{ item | basename }}"
-        owner: "root"
-        group: "root"
-        mode: "0775"
-      with_fileglob:
-        - "../templates/*disk_free*.sh"
+    #
+    # nmaekawa.cloudwatch is a dependency role
+    #
+    # `cloudwatch_user_home` is setup in nmaekawa.cloudwatch/tasks/set_instance_facts.yml
+    # `custom_metrics_shared.sh` is assumed to be in `cloudwatch_user_home`/bin
+    #
 
     - name: copy response_time scripts
       template:
         src: "{{ item }}"
-        dest: "{{ org_rootdir }}/bin/{{ item | basename }}"
+        dest: "{{ cloudwatch_user_home }}/bin/{{ item | basename }}"
         owner: "root"
         group: "root"
         mode: "0775"
@@ -34,7 +20,7 @@
     - name: copy make_jwt script
       template:
         src: "../templates/make_jwt.py"
-        dest: "{{ org_rootdir }}/bin/make_jwt.py"
+        dest: "{{ cloudwatch_user_home }}/bin/make_jwt.py"
         owner: "root"
         group: "root"
         mode: "0775"
