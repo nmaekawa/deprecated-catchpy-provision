@@ -1,7 +1,0 @@
----
-    - name: create cloudwatch user
-      import_tasks: ../../user_account/tasks/setup_user.yml
-      args:
-        user:
-            name: "{{ cloudwatch_user }}"
-            group: "{{ cloudwatch_group }}"

@@ -1,9 +1,0 @@
----
-
-    - name: install packages jq, aws
-      apt:
-        name: "{{ item }}"
-        state: installed
-      with_items:
-          - jq
-          - awscli

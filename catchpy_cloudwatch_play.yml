@@ -54,5 +54,10 @@
         vars:
             cloudwatch_user: cloudwatch
 
+      - import_role:
+            name: cloudwatch
+
+
+
 
 
