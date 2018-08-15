@@ -8,7 +8,7 @@
 
 # https://gist.github.com/gwillem/4ba393dceb55e5ae276a87300f6b8e6f
 # https://stackoverflow.com/questions/32429259/ansible-fails-with-bin-sh-1-usr-bin-python-not-found/41429731
-- hosts: '{{ target_hosts | default("tag_webserver_candidate", true) }}:&tag_project_{{ service_name }}'
+- hosts: '{{ target_hosts | default("tag_webserver_candidate", true) }}'
   remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
@@ -24,7 +24,7 @@
         changed_when: "result.stdout != ''"
 
 
-- hosts: '{{ target_hosts | default("tag_webserver_candidate", true) }}:&tag_project_{{ service_name }}'
+- hosts: '{{ target_hosts | default("tag_webserver_candidate", true) }}'
   remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root

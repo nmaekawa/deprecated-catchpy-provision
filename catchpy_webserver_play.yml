@@ -1,5 +1,5 @@
 ---
-- hosts: '{{ target_hosts | default("tag_webserver", true) }}'
+- hosts: '{{ target_hosts | default("tag_webserver_candidate", true) }}'
   remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
@@ -15,7 +15,7 @@
         changed_when: "result.stdout != ''"
 
 
-- hosts: '{{ target_hosts | default("tag_webserver", true) }}'
+- hosts: '{{ target_hosts | default("tag_webserver_candidate", true) }}'
   remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
@@ -45,7 +45,7 @@
             users_users: '{{ users_developers + [local_user] }}'
 
 
-- hosts: '{{ target_hosts | default("tag_webserver", true) }}'
+- hosts: '{{ target_hosts | default("tag_webserver_candidate", true) }}'
   remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root

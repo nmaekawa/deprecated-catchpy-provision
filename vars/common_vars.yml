@@ -30,5 +30,5 @@ local_certs_dir: '{{ lookup("env", "LOCAL_CERTS_DIR") | default("/Volumes/magic_
 create_extra_ebs: true
 ebs_device: '/dev/xvdh'
 ebs_mountpoint: '{{ (ec2_tag_cluster == "vagrant") | ternary("/opt", "/opt/data_ebs") }}'
-ebs_volume_size: 8
+ebs_volume_size: 16
 
