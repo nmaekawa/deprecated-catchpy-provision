@@ -45,7 +45,7 @@
         become_user: "{{ lookup('env', 'USER') }}"
         delegate_to: localhost
         ec2_vol:
-            instance: "{{ hostvars[item].ec2_id }}"
+            instance: "{{ hostvars[inventory_hostname].ec2_id }}"
             volume_size: "{{ ebs_volume_size }}"
             volume_type: gp2
             device_name: "{{ ebs_device }}"
@@ -54,22 +54,21 @@
                 cluster: "{{ ec2_tag_cluster }}"
                 project: "{{ ec2_tag_project }}"
                 Name: "{{ ec2_tag_Name }}-extra"
-        with_items: "{{ hostvars }}"
-        register: ec2_vol
+        register: ec2_volume
 
-      - name: print ebs info
+
+      - name: ebs info
         debug:
-           msg: "{{ item }}"
-        with_items: "{{ ec2_vol.results }}"
+            var: ec2_volume
+
 
       - name: attach volume
         become_user: "{{ lookup('env', 'USER') }}"
         delegate_to: localhost
         ec2_vol:
-            id: "{{ item.volume_id }}"
-            instance: "{{ item.invocation.module_args.instance }}"
+            id: "{{ ec2_volume.volume_id }}"
+            instance: "{{ hostvars[inventory_hostname].ec2_id }}"
             device_name: "{{ ebs_device }}"
-        with_items: "{{ ec2_vol.results }}"
 
       - name: make filesystem out of ebs
         filesystem:
