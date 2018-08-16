@@ -8,8 +8,8 @@
     - name: ensure tmp folder exists
       file:
         path: "{{ cloudwatch_user_home }}/tmp/cloudwatch"
-        owner: "root"
-        group: "root"
+        owner: "{{ cloudwatch_user }}"
+        group: "{{ cloudwatch_user }}"
         mode: 0755
         state: directory
 

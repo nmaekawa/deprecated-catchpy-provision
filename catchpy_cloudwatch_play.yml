@@ -41,18 +41,16 @@
         vars:
             users_enabled: yes
             users_users:
-                - name: cloudwatch
+                - name: '{{ cloudwatch_user }}'
                   authorized: []
             users_to_install:
-                - cloudwatch
+                - '{{ cloudwatch_user }}'
 
       - name: setup webserver name
         include_tasks: 'roles/facts_setup/tasks/webserver_dns.yml'
 
       - import_role:
             name: external/nmaekawa.cloudwatch
-        vars:
-            cloudwatch_user: cloudwatch
 
       - import_role:
             name: cloudwatch

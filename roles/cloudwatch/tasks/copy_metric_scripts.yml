@@ -10,8 +10,8 @@
       template:
         src: "{{ item }}"
         dest: "{{ cloudwatch_user_home }}/bin/{{ item | basename }}"
-        owner: "root"
-        group: "root"
+        owner: "{{ cloudwatch_user }}"
+        group: "{{ cloudwatch_user }}"
         mode: "0775"
       with_fileglob:
         - "../templates/*response_time*.sh"
@@ -21,8 +21,8 @@
       template:
         src: "../templates/make_jwt.py"
         dest: "{{ cloudwatch_user_home }}/bin/make_jwt.py"
-        owner: "root"
-        group: "root"
+        owner: "{{ cloudwatch_user }}"
+        group: "{{ cloudwatch_user }}"
         mode: "0775"
       when: "'tag_webserver' in group_names or 'tag_webserver_candidate' in group_names"
 
