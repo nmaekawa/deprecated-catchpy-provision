@@ -57,8 +57,8 @@ Run:
     # set vagrant insecure key in your env
     (venv) $> ssh-add ~/.vagrant.d/insecure_private_key
 
-    # playbook catchpy_install_play.yml will set the db and catchpy django
-    (venv) $> ansible-playbook -i hosts/vagrant.ini catchpy_install_play.yml
+    # playbook catchpy_allinone_play.yml will set the db and catchpy django
+    (venv) $> ansible-playbook -i hosts/vagrant.ini catchpy_allinone_play.yml
 
 if all goes well, you should be able to see the django-admin ui:
 
@@ -103,7 +103,7 @@ environment. Check:
 
 and run the provision with these env vars:
 
-    $> (source catchpy_sample.env; ansible-playbook -i hosts/vagrant.ini catchpy_install_play.yml)
+    $> (source catchpy_sample.env; ansible-playbook -i hosts/vagrant.ini catchpy_allinone_play.yml)
 
 
 

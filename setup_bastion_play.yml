@@ -1,4 +1,3 @@
-# initial playbook to provision a catchpy server
 ---
 - hosts: '{{ target_hosts | default("tag_bastion", true) }}'
   remote_user: "{{ my_remote_user }}"

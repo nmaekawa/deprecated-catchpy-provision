@@ -11,7 +11,7 @@
 #
 #      ebs_device: "/dev/xvdh"
 #      ebs_mountpoint: "/opt/data_ebs"
-#      ebs_volume_size: 8
+#      ebs_volume_size: 16
 #
 ---
 - hosts: '{{ target_hosts | default("tag_webserver_candidate", true) }}'
@@ -41,6 +41,13 @@
       - include_tasks: handlers/main.yml
 
   tasks:
+      - name: check if device_name already taken
+        include_tasks: roles/aws/tasks/check_extra_ebs_exists.yml
+
+      - fail:
+          msg: "device_name ({{ ebs_device }}) already has a volume attached!"
+        when: "ebs_device_exists != '0'"
+
       - name: create extra ebs volume
         become_user: "{{ lookup('env', 'USER') }}"
         delegate_to: localhost
@@ -56,11 +63,9 @@
                 Name: "{{ ec2_tag_Name }}-extra"
         register: ec2_volume
 
-
       - name: ebs info
         debug:
             var: ec2_volume
-
 
       - name: attach volume
         become_user: "{{ lookup('env', 'USER') }}"
