@@ -9,7 +9,7 @@ catch_jwt=$({{ service_venv_dir }}/bin/python {{ cloudwatch_user_home }}/bin/mak
 response_time=$(curl -w "%{time_total}" \
     --silent \
     -H "Authorization: token ${catch_jwt}" \
-    {{ (enable_ssl == "true") | ternary("https", "http") }}://{{ webserver_dns }}/is_alive \
+    {{ enable_ssl | ternary("https", "http") }}://{{ webserver_dns }}/is_alive \
     -o {{ cloudwatch_user_home }}/tmp/cloudwatch/is_alive_response.json)
 
 # check that payload is ok from is_alive response; needs to install jq
