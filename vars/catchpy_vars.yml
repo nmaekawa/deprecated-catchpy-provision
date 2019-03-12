@@ -97,6 +97,7 @@ apt_required_packages_catchpy:
     - 'nginx'
     - 'supervisor'
     - 'sqlite3'
+    - 'postgresql-client'
 
 apt_required_packages_bastion:
     - 'python-pip'

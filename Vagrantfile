@@ -22,4 +22,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
+  # postgres
+  config.vm.define "dbserver" do |dbserver|
+    dbserver.vm.box = "bento/ubuntu-16.04"
+    dbserver.vm.hostname = "dbserver.vm"
+    dbserver.vm.network "private_network", ip: "10.5.50.30"
+
+    dbserver.ssh.forward_agent = true
+    dbserver.ssh.insert_key = false
+
+    dbserver.vm.provider "virtualbox" do |v|
+        v.memory = "4096"
+    end
+  end
+
 end
