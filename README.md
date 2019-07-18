@@ -1,4 +1,4 @@
-# catchpy-provision
+# catchpy-provision -- DEPRECATED
 ansible provisioning for catchpy backend service
 
 # disclaimer
